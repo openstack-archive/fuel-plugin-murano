@@ -1,0 +1,174 @@
+- id: primary-murano-node
+  type: group
+  role: [primary-murano-node]
+  tasks: &common_tasks
+    - hiera
+    - setup_repositories
+    - fuel_pkgs
+    - globals
+    - tools
+    - logging
+    - netconfig
+    - hosts
+  required_for: [deploy_end]
+  requires: [primary-controller]
+  parameters:
+    strategy:
+      type: one_by_one
+
+- id: murano-node
+  type: group
+  role: [murano-node]
+  tasks: *common_tasks
+  required_for: [deploy_end]
+  requires: [primary-murano-node]
+  parameters:
+    strategy:
+      type: parallel
+
+- id: hiera-murano-override
+  version: 2.0.0
+  type: puppet
+  groups: ['primary-controller', 'controller', 'primary-murano-node', 'murano-node']
+  required_for: [logging]
+  requires: [globals]
+  parameters:
+    puppet_manifest: manifests/murano_hiera_override.pp
+    puppet_modules: /etc/puppet/modules
+    timeout: 120
+  # reexecute_on is needed for scale-down operations
+  reexecute_on:
+    - deploy_changes
+
+- id: murano-keystone-endpoints
+  version: 2.0.0
+  type: puppet
+  groups: ['primary-controller']
+  required_for: [murano-controller-end]
+  requires: [primary-keystone, keystone]
+  cross-depends:
+    - name: keystone
+  parameters:
+    puppet_manifest: manifests/murano_keystone.pp
+    puppet_modules: /etc/puppet/modules:modules
+    timeout: 1800
+  # reexecute_on is needed for scale-down operations
+  reexecute_on:
+    - deploy_changes
+
+- id: murano-database
+  version: 2.0.0
+  type: puppet
+  groups: ['primary-controller']
+  cross-depends:
+    - name: /(primary-)?database/
+  required_for: [murano-controller-end]
+  requires: [primary-database, database]
+  parameters:
+    puppet_manifest: manifests/murano_db.pp
+    puppet_modules: /etc/puppet/modules:modules
+    timeout: 1800
+  # reexecute_on is needed for scale-down operations
+  reexecute_on:
+    - deploy_changes
+
+- id: murano-dashboard
+  version: 2.0.0
+  type: puppet
+  groups: ['primary-controller','controller']
+  required_for: [murano-controller-end]
+  requires: [horizon]
+  parameters:
+    puppet_manifest: manifests/murano_dashboard.pp
+    puppet_modules: /etc/puppet/modules:modules
+    timeout: 1800
+  # reexecute_on is needed for scale-down operations
+  reexecute_on:
+    - deploy_changes
+
+- id: murano-controller-end
+  version: 2.0.0
+  type: skipped
+  groups: ['primary-controller','controller']
+  required_for: [deploy_end]
+  requires: []
+
+- id: murano-update-openrc
+  version: 2.0.0
+  type: puppet
+  groups: ['primary-controller', 'controller']
+  required_for: [murano-controller-end]
+  requires: [primary-keystone, keystone]
+  cross-depends:
+    - name: keystone
+  parameters:
+    puppet_manifest: manifests/update_openrc.pp
+    puppet_modules: /etc/puppet/modules
+    timeout: 120
+  # reexecute_on is needed for scale-down operations
+  reexecute_on:
+    - deploy_changes
+
+- id: murano-haproxy
+  version: 2.0.0
+  type: puppet
+  groups: ['primary-controller', 'controller']
+  required_for: [murano-controller-end]
+  requires: [deploy_start, primary-cluster-haproxy, cluster-haproxy]
+  cross-depends:
+    - name: /(primary-)?cluster-haproxy/
+      role: self
+  parameters:
+    puppet_manifest: manifests/murano_haproxy.pp
+    puppet_modules: /etc/puppet/modules
+    timeout: 300
+  # reexecute_on is needed for scale-down operations
+  reexecute_on:
+    - deploy_changes
+
+- id: murano-logging
+  version: 2.0.0
+  type: puppet
+  groups: ['primary-murano-node', 'murano-node']
+  required_for: [murano-services]
+  requires: [logging]
+  parameters:
+    puppet_manifest: manifests/murano_logging.pp
+    puppet_modules: /etc/puppet/modules
+    timeout: 1800
+
+- id: murano-services
+  version: 2.0.0
+  type: puppet
+  groups: ['primary-murano-node', 'murano-node']
+  required_for: [deploy_end]
+  requires: [hosts]
+  cross-depends:
+    - name: murano-controller-end
+  parameters:
+    puppet_manifest: manifests/murano.pp
+    puppet_modules: /etc/puppet/modules:modules
+    timeout: 3600
+
+- id: murano-node-rabbitmq
+  version: 2.0.0
+  type: puppet
+  groups: ['primary-murano-node', 'murano-node']
+  required_for: [murano-services]
+  requires: [hosts]
+  parameters:
+    puppet_manifest: manifests/murano_rabbitmq.pp
+    puppet_modules: /etc/puppet/modules:modules
+    timeout: 1800
+
+- id: murano-node-cfapi
+  version: 2.0.0
+  type: puppet
+  groups: ['primary-murano-node', 'murano-node']
+  required_for: [deploy_end]
+  requires: [murano-services]
+  parameters:
+    puppet_manifest: manifests/murano_cfapi.pp
+    puppet_modules: /etc/puppet/modules:modules
+    timeout: 3600
+  condition: "settings:detach-murano.murano_cfapi.value == true"

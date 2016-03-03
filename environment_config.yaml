@@ -1,0 +1,42 @@
+attributes:
+  metadata:
+    group: 'openstack_services'
+    restrictions:
+      - condition: "settings:additional_components.murano.value == true"
+        message: "Murano plugin can't be deployed with enabled Murano from box"
+  murano_repo_url:
+    value: "http://storage.apps.openstack.org/"
+    label: "Murano Repository URL"
+    description: ""
+    weight: 10
+    type: "text"
+  murano_user_password:
+    value: ''
+    label: 'User password'
+    description: 'The password of the Murano user'
+    weight: 11
+    type: "password"
+    regex:
+      source: '^[\S]{4,}$'
+      error: "You must provide a password with at least 4 characters"
+  murano_db_password:
+    value: ''
+    label: 'DB User password'
+    description: 'The password of the Murano user in database'
+    weight: 12
+    type: "password"
+    regex:
+      source: '^[\S]{4,}$'
+      error: "You must provide a password with at least 4 characters"
+  murano_cfapi:
+    value: false
+    label: "Install Murano service broker for Cloud Foundry"
+    description: "If selected, Murano service broker will be installed"
+    weight: 20
+    type: "checkbox"
+  murano_glance_artifacts:
+    value: true
+    label: "Enable glance artifact repository"
+    description: "If selected glance artifact repository will be enabled"
+    weight: 30
+    type: "checkbox"
