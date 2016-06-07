@@ -25,7 +25,6 @@ $use_stderr                 = hiera('use_stderr', false)
 $rabbit_ha_queues           = hiera('rabbit_ha_queues', false)
 $amqp_port                  = hiera('amqp_port')
 $amqp_hosts                 = hiera('amqp_hosts')
-$external_lb                = hiera('external_lb', false)
 
 $internal_auth_protocol = get_ssl_property($ssl_hash, {}, 'keystone', 'internal', 'protocol', 'http')
 $internal_auth_address  = get_ssl_property($ssl_hash, {}, 'keystone', 'internal', 'hostname', [hiera('keystone_endpoint', ''), $service_endpoint, $management_ip])
@@ -134,38 +133,5 @@ class { '::murano::api':
 
 include ::murano::engine
 include ::murano::client
-
-if $primary_murano {
-  murano::application { 'io.murano' : }
-}
-
-$haproxy_stats_url = "http://${management_ip}:10000/;csv"
-$murano_protocol = get_ssl_property($ssl_hash, {}, 'murano', 'internal', 'protocol', 'http')
-$murano_address  = get_ssl_property($ssl_hash, {}, 'murano', 'internal', 'hostname', [$service_endpoint, $management_ip])
-$murano_url      = "${murano_protocol}://${murano_address}:${api_bind_port}"
-$lb_defaults     = { 'provider' => 'haproxy', 'url' => $haproxy_stats_url }
-
-if $external_lb {
-  $lb_backend_provider = 'http'
-  $lb_url = $murano_url
-}
-
-$lb_hash = {
-  'murano-api' => {
-    name     => 'murano-api',
-    provider => $lb_backend_provider,
-    url      => $lb_url
-  }
-}
-
-class {'::osnailyfacter::wait_for_keystone_backends':} ->
-::osnailyfacter::wait_for_backend {'murano-api':
-  lb_hash     => $lb_hash,
-  lb_defaults => $lb_defaults
-}
-
-Service['murano-api'] ->
-  ::Osnailyfacter::Wait_for_backend['murano-api'] ->
-    Murano::Application['io.murano']
 
 Firewall[$firewall_rule] -> Class['murano::api']
