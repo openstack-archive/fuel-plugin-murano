@@ -22,6 +22,15 @@ package { 'murano-rabbitmq':
   ensure => latest,
 }
 
+$firewall_rule = '203 murano-rabbitmq'
+include ::firewall
+firewall { $firewall_rule :
+  dport  => '55572',
+  proto  => 'tcp',
+  action => 'accept',
+  before => Service[$rabbit_service_name],
+}
+
 service { $rabbit_service_name :
   ensure => 'running',
   name   => $rabbit_service_name,
