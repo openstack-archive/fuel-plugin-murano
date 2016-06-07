@@ -168,6 +168,6 @@ class {'::osnailyfacter::wait_for_keystone_backends':} ->
 
 Service['murano-api'] ->
   ::Osnailyfacter::Wait_for_backend['murano-api'] ->
-    Murano::Application['io.murano']
+    Murano::Application<||>
 
 Firewall[$firewall_rule] -> Class['murano::api']
