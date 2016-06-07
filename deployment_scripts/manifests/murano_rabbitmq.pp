@@ -25,6 +25,15 @@ if (roles_include(['primary-controller', 'controller']) and ! $murano_hash['mura
     ensure => latest,
   }
 
+  $firewall_rule = '203 murano-rabbitmq'
+  include ::firewall
+  firewall { $firewall_rule :
+    dport  => '55572',
+    proto  => 'tcp',
+    action => 'accept',
+    before => Service[$rabbit_service_name],
+  }
+
   service { $rabbit_service_name :
     ensure => 'running',
     name   => $rabbit_service_name,
@@ -56,10 +65,5 @@ if (roles_include(['primary-controller', 'controller']) and ! $murano_hash['mura
   }
 
   Package['murano-rabbitmq'] ~> Service[$rabbit_service_name]
-
-  Service[$rabbit_service_name] ->
-    Exec['remove_murano_guest'] ->
-      Exec['create_murano_user'] ->
-        Exec['create_murano_vhost'] ->
-          Exec['set_murano_user_permissions']
+  Service[$rabbit_service_name] -> Exec<||>
 }
