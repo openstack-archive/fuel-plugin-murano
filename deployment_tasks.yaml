@@ -27,7 +27,7 @@
       type: parallel
 
 - id: hiera-murano-override
-  version: 2.0.0
+  version: 2.1.0
   type: puppet
   groups: ['primary-controller', 'controller', 'primary-murano-node', 'murano-node']
   required_for: [logging]
@@ -41,7 +41,7 @@
     - deploy_changes
 
 - id: murano-keystone-endpoints
-  version: 2.0.0
+  version: 2.1.0
   type: puppet
   groups: ['primary-controller']
   required_for: [murano-controller-end]
@@ -57,7 +57,7 @@
     - deploy_changes
 
 - id: murano-database
-  version: 2.0.0
+  version: 2.1.0
   type: puppet
   groups: ['primary-controller']
   cross-depends:
@@ -73,7 +73,7 @@
     - deploy_changes
 
 - id: murano-dashboard
-  version: 2.0.0
+  version: 2.1.0
   type: puppet
   groups: ['primary-controller','controller']
   required_for: [murano-controller-end]
@@ -87,14 +87,14 @@
     - deploy_changes
 
 - id: murano-controller-end
-  version: 2.0.0
+  version: 2.1.0
   type: skipped
   groups: ['primary-controller','controller']
   required_for: [deploy_end]
   requires: []
 
 - id: murano-update-openrc
-  version: 2.0.0
+  version: 2.1.0
   type: puppet
   groups: ['primary-controller', 'controller']
   required_for: [murano-controller-end]
@@ -110,7 +110,7 @@
     - deploy_changes
 
 - id: murano-haproxy
-  version: 2.0.0
+  version: 2.1.0
   type: puppet
   groups: ['primary-controller', 'controller']
   required_for: [murano-controller-end]
@@ -127,7 +127,7 @@
     - deploy_changes
 
 - id: murano-logging
-  version: 2.0.0
+  version: 2.1.0
   type: puppet
   groups: ['primary-murano-node', 'murano-node']
   required_for: [murano-services]
@@ -138,7 +138,7 @@
     timeout: 1800
 
 - id: murano-services
-  version: 2.0.0
+  version: 2.1.0
   type: puppet
   groups: ['primary-murano-node', 'murano-node']
   required_for: [deploy_end]
@@ -151,7 +151,7 @@
     timeout: 3600
 
 - id: murano-node-rabbitmq
-  version: 2.0.0
+  version: 2.1.0
   type: puppet
   groups: ['primary-murano-node', 'murano-node']
   required_for: [murano-services]
@@ -162,7 +162,7 @@
     timeout: 1800
 
 - id: murano-node-cfapi
-  version: 2.0.0
+  version: 2.1.0
   type: puppet
   groups: ['primary-murano-node', 'murano-node']
   required_for: [deploy_end]
@@ -172,3 +172,15 @@
     puppet_modules: /etc/puppet/modules:modules
     timeout: 3600
   condition: "settings:detach-murano.murano_cfapi.value == true"
+
+- id: upload_murano_package
+  type: puppet
+  version: 2.1.0
+  groups: ['primary-murano-node']
+  required_for: [post_deployment_end]
+  cross-depends:
+    - name: upload_cirros
+  parameters:
+    puppet_manifest: manifests/upload_murano_package.pp
+    puppet_modules: /etc/puppet/modules:modules
+    timeout: 180
