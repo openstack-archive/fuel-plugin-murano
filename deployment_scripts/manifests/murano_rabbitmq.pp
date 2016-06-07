@@ -25,6 +25,14 @@ if (roles_include(['primary-controller', 'controller']) and ! $murano_hash['mura
     ensure => latest,
   }
 
+  $firewall_rule = '203 murano-rabbitmq'
+  include ::firewall
+  firewall { $firewall_rule :
+    dport  => '55572',
+    proto  => 'tcp',
+    action => 'accept',
+  }
+
   service { $rabbit_service_name :
     ensure => 'running',
     name   => $rabbit_service_name,

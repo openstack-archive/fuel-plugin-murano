@@ -187,6 +187,18 @@
     timeout: 3600
   condition: "settings:murano-plugin.murano_cfapi.value == true"
 
+- id: upload_murano_package
+  type: puppet
+  version: 2.1.0
+  groups: ['primary-murano-node', 'primary-controller']
+  required_for: [post_deployment_end]
+  cross-depends:
+    - name: upload_cirros
+  parameters:
+    puppet_manifest: manifests/upload_murano_package.pp
+    puppet_modules: /etc/puppet/modules:modules
+    timeout: 180
+
 # skip base murano tasks
 - id: murano
   type: skipped
@@ -208,3 +220,4 @@
 
 - id: upload_murano_package
   type: skipped
+
