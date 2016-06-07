@@ -211,7 +211,7 @@
       $.get('default_log_levels'), $.get('use_syslog'),
       $.get('use_stderr'), $.get('rabbit_ha_queues'), $.get('amqp_port'),
       $.get('amqp_hosts'), $.external_dns, $.public_ssl, $.get('use_ssl'),
-      $.get('kombu_compression'), $.get('external_lb'), $.get('keystone_endpoint'))
+      $.get('kombu_compression'), $.get('keystone_endpoint'))
   required_for: [deploy_end]
   requires: [hosts]
   cross-depends:
@@ -307,6 +307,25 @@
     puppet_modules: /etc/puppet/modules
     timeout: 120
 #####
+
+- id: import_murano_package
+  type: puppet
+  version: 2.1.0
+  groups: ['primary-murano-node', 'primary-controller']
+  condition:
+    yaql_exp: >
+      $.get('detach-murano', {}).get('metadata', {}).get('enabled', false) and
+      ($.roles.any($.matches('primary-murano-node')) or
+      not $.network_metadata.nodes.values().any(
+         ('primary-murano-node' in $.node_roles))) and
+      changedAny($.get('detach-murano').murano_glance_artifacts)
+  required_for: [post_deployment_end]
+  cross-depends:
+    - name: upload_cirros
+  parameters:
+    puppet_manifest: manifests/import_murano_package.pp
+    puppet_modules: /etc/puppet/modules:modules
+    timeout: 180
 
 # skip base murano tasks
 - id: murano
