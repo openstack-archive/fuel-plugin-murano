@@ -19,6 +19,15 @@ $rabbit_service_name  = 'murano-rabbitmq'
 
 #################################################################
 
+$firewall_rule = '203 murano-rabbitmq'
+
+include ::firewall
+firewall { $firewall_rule :
+  dport  => '55572',
+  proto  => 'tcp',
+  action => 'accept',
+}
+
 package { 'murano-rabbitmq':
   ensure => present,
 }

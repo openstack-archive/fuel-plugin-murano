@@ -137,10 +137,6 @@ class { '::murano::api':
 include ::murano::engine
 include ::murano::client
 
-if $primary_murano {
-  murano::application { 'io.murano' : }
-}
-
 $haproxy_stats_url = "http://${management_ip}:10000/;csv"
 $murano_protocol = get_ssl_property($ssl_hash, {}, 'murano', 'internal', 'protocol', 'http')
 $murano_address  = get_ssl_property($ssl_hash, {}, 'murano', 'internal', 'hostname', [$service_endpoint, $management_ip])
@@ -167,7 +163,6 @@ class {'::osnailyfacter::wait_for_keystone_backends':} ->
 }
 
 Service['murano-api'] ->
-  ::Osnailyfacter::Wait_for_backend['murano-api'] ->
-    Murano::Application['io.murano']
+  ::Osnailyfacter::Wait_for_backend['murano-api']
 
 Firewall[$firewall_rule] -> Class['murano::api']
