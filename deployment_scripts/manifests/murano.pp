@@ -103,7 +103,7 @@ class { '::murano' :
   log_facility        => $syslog_log_facility_murano,
   database_connection => $db_connection,
   sync_db             => $primary_murano,
-  auth_uri            => "${internal_auth_protocol}://${internal_auth_address}:5000/v2.0/",
+  auth_uri            => "${internal_auth_protocol}://${internal_auth_address}:5000/",
   admin_user          => $murano_user,
   admin_password      => $murano_password,
   admin_tenant_name   => $tenant,
