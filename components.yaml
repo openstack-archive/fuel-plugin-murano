@@ -15,5 +15,4 @@
     - name: additional_service:sahara
     - name: additional_service:ceilometer
     - name: additional_service:ironic
-  incompatible:
     - name: additional_service:murano
