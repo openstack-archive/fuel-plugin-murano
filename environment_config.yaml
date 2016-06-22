@@ -1,9 +1,6 @@
 attributes:
   metadata:
     group: 'openstack_services'
-    restrictions:
-      - condition: "settings:additional_components.murano.value == true"
-        message: "Murano plugin can't be deployed with enabled Murano from box"
   murano_repo_url:
     value: "http://storage.apps.openstack.org/"
     label: "Murano Repository URL"
@@ -13,24 +10,6 @@ attributes:
     regex:
       source: '^(http(s?):\/\/)?([a-zA-Z\d]+[a-zA-Z\d_\-.]*)(:[0-9]+)?(\/[a-zA-Z0-9_\-\s.\/\?%#&=]*)?$'
       error: "Invalid URL, ie: http://storage.apps.openstack.org/"
-  murano_user_password:
-    value: ''
-    label: 'User password'
-    description: 'The password of the Murano user'
-    weight: 11
-    type: "password"
-    regex:
-      source: '^[\S]{4,}$'
-      error: "You must provide a password with at least 4 characters"
-  murano_db_password:
-    value: ''
-    label: 'DB User password'
-    description: 'The password of the Murano user in database'
-    weight: 12
-    type: "password"
-    regex:
-      source: '^[\S]{4,}$'
-      error: "You must provide a password with at least 4 characters"
   murano_cfapi:
     value: false
     label: "Install Murano service broker for Cloud Foundry"
@@ -43,3 +22,15 @@ attributes:
     description: "If selected glance artifact repository will be enabled"
     weight: 30
     type: "checkbox"
+  yaml_additional_config:
+    description: |
+      This field contains free form YAML to provide extra parameters.
+    type: "textarea"
+    weight: 35
+    value: |
+      #Uncomment to add custom settings
+      #murano_db_password: database_password
+      #murano_user_password: keystone_user_password
+      #murano_rabbit_vhost: "/"
+      #murano_rabbit_port: 55572
+    label: "Additional config"

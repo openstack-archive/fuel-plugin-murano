@@ -22,19 +22,17 @@ DEB_REPO="${ROOT}"/repositories/ubuntu/
 
 # Download RPM or DEB packages and store them in the local repository directory
 function download_package {
-    while [ $# -gt 0 ]; do
-        if [[ "$1" == *.deb ]]; then
-            REPO=$DEB_REPO
-        elif [[ "$1" == *.rpm ]]; then
-            REPO=$RPM_REPO
-        else
-            echo "Invalid URL for download_package(): $1"
-        fi
+    local package_type=$1
+    local url=$2
+    if [[ "$package_type" == 'deb' ]]; then
+      REPO=$DEB_REPO
+    elif [[ "$package_type" == 'rpm' ]]; then
+      REPO=$RPM_REPO
+    else
+      echo "Invalid package type: $1"
+    fi
 
-        FILE=$(basename "$1")
-        wget -qO - "$1" > "$REPO"/"$FILE"
-        shift
-    done
+    wget -P "$REPO" -A "$package_type" -nd -r -l 1 "$url"
 }
 
 # Download official Puppet module and store it in the local directory

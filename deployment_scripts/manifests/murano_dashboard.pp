@@ -8,6 +8,9 @@ $repository_url = has_key($murano_hash, 'murano_repo_url') ? {
 }
 if has_key($murano_plugins, 'glance_artifacts_plugin') and $murano_plugins['glance_artifacts_plugin']['enabled'] {
   $use_glare = true
+  package {'murano-glance-artifacts-plugin':
+    ensure  => 'latest',
+  }
 } else {
   $use_glare = false
 }
@@ -24,7 +27,10 @@ ensure_resource('service', 'httpd', {
 })
 
 class { '::murano::dashboard':
-  enable_glare => $use_glare,
-  repo_url     => $repository_url,
-  sync_db      => false,
+  enable_glare   => $use_glare,
+  repo_url       => $repository_url,
+  sync_db        => false,
+  package_ensure => 'latest'
 }
+
+Concat<||> ~> Service['httpd']
