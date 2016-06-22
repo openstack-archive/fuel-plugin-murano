@@ -3,6 +3,9 @@ notice('MODULAR: murano/rabbitmq.pp')
 $rabbit_hash = hiera_hash('rabbit', {})
 $murano_hash = hiera_hash('murano', {})
 
+if (roles_include(['primary-controller', 'controller']) and ! $murano_hash['murano_standalone']) or
+    roles_include(['primary-murano-node', 'murano-node']) {
+
 if $rabbit_hash == {} {
   fail('No rabbit_hash defined')
 }
@@ -13,7 +16,6 @@ if !$rabbit_hash['password'] {
 $rabbit_user          = pick($rabbit_hash['user'], 'nova')
 $rabbit_password      = $rabbit_hash['password']
 $rabbit_vhost         = $murano_hash['rabbit']['vhost']
-
 $rabbit_node_name     = 'murano@localhost'
 $rabbit_service_name  = 'murano-rabbitmq'
 
@@ -29,7 +31,7 @@ firewall { $firewall_rule :
 }
 
 package { 'murano-rabbitmq':
-  ensure => present,
+  ensure => latest,
 }
 
 service { $rabbit_service_name :
@@ -69,3 +71,5 @@ Service[$rabbit_service_name] ->
     Exec['create_murano_user'] ->
       Exec['create_murano_vhost'] ->
         Exec['set_murano_user_permissions']
+
+}
