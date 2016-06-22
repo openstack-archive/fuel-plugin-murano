@@ -1,4 +1,4 @@
-notice('MURANO PLUGIN: haproxy_murano.pp')
+notice('MURANO PLUGIN: murano_haproxy.pp')
 
 $murano_hash        = hiera_hash('murano',{})
 $murano_cfapi_hash  = hiera_hash('murano_cfapi', {})

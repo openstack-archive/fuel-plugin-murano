@@ -1,27 +1,50 @@
 notice('MURANO PLUGIN: murano_hiera_override.pp')
 
-$detach_murano_plugin = hiera('detach-murano', undef)
+$murano_plugin = hiera('detach-murano', undef)
 $hiera_dir = '/etc/hiera/plugins'
 $plugin_name = 'detach-murano'
 $plugin_yaml = "${plugin_name}.yaml"
 
-if $detach_murano_plugin {
-  $network_metadata           = hiera_hash('network_metadata')
-  $murano_nodes               = get_nodes_hash_by_roles($network_metadata, ['primary-murano-node', 'murano-node'])
-  $murano_address_map         = get_node_to_ipaddr_map_by_network_role($murano_nodes, 'management')
-  $murano_nodes_ips           = values($murano_address_map)
-  $murano_nodes_names         = keys($murano_address_map)
-  $murano_cfapi_enabled       = $detach_murano_plugin['murano_cfapi']
-  $murano_repo_url            = $detach_murano_plugin['murano_repo_url']
-  $murano_glance_artifacts    = $detach_murano_plugin['murano_glance_artifacts']
+if $murano_plugin {
+  $additional_settings = parseyaml($murano_plugin['yaml_additional_config']) # stdlib 4.9.x tag in mitaka supports only 1 argument
+  if is_bool($additional_settings) {
+    $settings_hash = {}
+  } else {
+    $settings_hash = $additional_settings
+  }
+  $network_metadata   = hiera_hash('network_metadata')
+  $murano_base_hash   = hiera_hash('murano', {})
+  $murano_role_exists = empty(nodes_with_roles(['primary-murano-node'])) ? {
+    true    => false,
+    default => true,
+  }
+  if $murano_role_exists {
+    $murano_nodes       = get_nodes_hash_by_roles($network_metadata, ['primary-murano-node', 'murano-node'])
+    $murano_address_map = get_node_to_ipaddr_map_by_network_role($murano_nodes, 'management')
+    $murano_nodes_ips   = values($murano_address_map)
+    $murano_nodes_names = keys($murano_address_map)
+  } else {
+    $murano_nodes       = get_nodes_hash_by_roles($network_metadata, ['primary-controller', 'controller'])
+    $murano_address_map = get_node_to_ipaddr_map_by_network_role($murano_nodes, 'management')
+    $murano_nodes_ips   = values($murano_address_map)
+    $murano_nodes_names = keys($murano_address_map)
+  }
+  $murano_db_password   = pick($settings_hash['murano_db_password'], $murano_base_hash['db_password'])
+  $murano_user_password = pick($settings_hash['murano_user_password'], $murano_base_hash['user_password'])
+  $murano_rabbit_host   = pick($settings_hash['murano_rabbit_vhost'], $murano_base_hash['rabbit']['vhost'])
+  $murano_rabbit_port   = pick($settings_hash['murano_rabbit_port'], $murano_base_hash['rabbit']['port'])
+
+  $murano_cfapi_enabled       = $murano_plugin['murano_cfapi']
+  $murano_repo_url            = $murano_plugin['murano_repo_url']
+  $murano_glance_artifacts    = $murano_plugin['murano_glance_artifacts']
   $syslog_log_facility_murano = hiera('syslog_log_facility_murano', 'LOG_LOCAL0')
   $default_log_levels         = hiera('default_log_levels')
-  $murano_db_password         = $detach_murano_plugin['murano_db_password']
-  $murano_user_password       = $detach_murano_plugin['murano_user_password']
 
   ###################
   $calculated_content = inline_template('
 murano:
+  murano_old_config: <% @murano_base_hash %>
+  murano_standalone: <%= @murano_role_exists %>
   murano_ipaddresses:
 <%
 @murano_nodes_ips.each do |muranoip|
@@ -33,8 +56,8 @@ murano:
 %>    - <%= muranoname %>
 <% end -%>
   rabbit:
-    vhost: "/"
-    port: "55572"
+    vhost: <%= @murano_rabbit_host %>
+    port: <%= @murano_rabbit_port %>
   db_password: <%= @murano_db_password %>
   user_password: <%= @murano_user_password %>
   murano_repo_url: <%= @murano_repo_url %>
