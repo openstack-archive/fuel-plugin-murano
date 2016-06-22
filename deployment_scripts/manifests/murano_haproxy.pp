@@ -1,4 +1,4 @@
-notice('MURANO PLUGIN: haproxy_murano.pp')
+notice('MURANO PLUGIN: murano_haproxy.pp')
 
 $murano_hash        = hiera_hash('murano',{})
 $murano_cfapi_hash  = hiera_hash('murano_cfapi', {})
@@ -6,7 +6,7 @@ $public_ssl_hash    = hiera_hash('public_ssl', {})
 $ssl_hash           = hiera_hash('use_ssl', {})
 $external_lb        = hiera('external_lb', false)
 
-if (!$external_lb) {
+if (!$external_lb) and ( $murano_hash['murano_standalone'] or ! $murano_hash['murano_base'] ) {
   $public_ssl        = get_ssl_property($ssl_hash, $public_ssl_hash, 'murano', 'public', 'usage', false)
   $public_ssl_path   = get_ssl_property($ssl_hash, $public_ssl_hash, 'murano', 'public', 'path', [''])
   $internal_ssl      = get_ssl_property($ssl_hash, {}, 'murano', 'internal', 'usage', false)
