@@ -40,6 +40,20 @@
   reexecute_on:
     - deploy_changes
 
+- id: pin-murano-plugin-repo
+  version: 2.1.0
+  type: puppet
+  groups: ['primary-controller', 'controller', 'primary-murano-node', 'murano-node' ]
+  required_for: [hiera-murano-override]
+  requires: [globals]
+  parameters:
+    puppet_manifest: manifests/pin_murano_plugin_repo.pp
+    puppet_modules: /etc/puppet/modules
+    timeout: 120
+  # reexecute_on is needed for scale-down operations
+  reexecute_on:
+    - deploy_changes
+
 - id: murano-keystone-endpoints
   version: 2.0.0
   type: puppet
@@ -129,7 +143,7 @@
 - id: murano-logging
   version: 2.0.0
   type: puppet
-  groups: ['primary-murano-node', 'murano-node']
+  groups: ['primary-controller', 'controller', 'primary-murano-node', 'murano-node']
   required_for: [murano-services]
   requires: [logging]
   parameters:
@@ -140,7 +154,7 @@
 - id: murano-services
   version: 2.0.0
   type: puppet
-  groups: ['primary-murano-node', 'murano-node']
+  groups: ['primary-controller', 'controller', 'primary-murano-node', 'murano-node']
   required_for: [deploy_end]
   requires: [hosts]
   cross-depends:
@@ -153,7 +167,7 @@
 - id: murano-node-rabbitmq
   version: 2.0.0
   type: puppet
-  groups: ['primary-murano-node', 'murano-node']
+  groups: ['primary-controller', 'controller', 'primary-murano-node', 'murano-node']
   required_for: [murano-services]
   requires: [hosts]
   parameters:
@@ -164,11 +178,33 @@
 - id: murano-node-cfapi
   version: 2.0.0
   type: puppet
-  groups: ['primary-murano-node', 'murano-node']
+  groups: ['primary-controller', 'controller', 'primary-murano-node', 'murano-node']
   required_for: [deploy_end]
   requires: [murano-services]
   parameters:
     puppet_manifest: manifests/murano_cfapi.pp
     puppet_modules: /etc/puppet/modules:modules
     timeout: 3600
-  condition: "settings:detach-murano.murano_cfapi.value == true"
+  condition: "settings:murano-plugin.murano_cfapi.value == true"
+
+# skip base murano tasks
+- id: murano
+  type: skipped
+
+- id: murano-db
+  type: skipped
+
+- id: murano-keystone
+  type: skipped
+
+- id: murano-rabbitmq
+  type: skipped
+
+- id: murano-cfapi
+  type: skipped
+
+- id: murano-cfapi-keystone
+  type: skipped
+
+- id: upload_murano_package
+  type: skipped
