@@ -1,6 +1,6 @@
 notice('MURANO PLUGIN: murano_db.pp')
 
-$murano_hash    = hiera_hash('murano', {})
+$murano_hash = hiera_hash('murano', {})
 $mysql_hash     = hiera_hash('mysql', {})
 $management_vip = hiera('management_vip', undef)
 $database_vip   = hiera('database_vip')

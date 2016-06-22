@@ -27,7 +27,7 @@
       type: parallel
 
 - id: hiera-murano-override
-  version: 2.0.0
+  version: 2.1.0
   type: puppet
   groups: ['primary-controller', 'controller', 'primary-murano-node', 'murano-node']
   required_for: [logging]
@@ -40,10 +40,34 @@
   reexecute_on:
     - deploy_changes
 
+- id: pin-murano-plugin-repo
+  version: 2.1.0
+  type: puppet
+  groups: ['primary-controller', 'controller', 'primary-murano-node', 'murano-node' ]
+  condition:
+    yaql_exp: >
+      $.get('detach-murano', {}).get('metadata', {}).get('enabled', false) and
+      changedAny($.get('detach-murano').metadata.plugin_version)
+  required_for: [hiera-murano-override]
+  requires: [globals]
+  parameters:
+    puppet_manifest: manifests/pin_murano_plugin_repo.pp
+    puppet_modules: /etc/puppet/modules
+    timeout: 120
+
 - id: murano-keystone-endpoints
-  version: 2.0.0
+  version: 2.1.0
   type: puppet
   groups: ['primary-controller']
+  condition:
+    yaql_exp: >
+      $.get('detach-murano', {}).get('metadata', {}).get('enabled', false) and
+      ($.network_metadata.nodes.values().any(
+         ('murano-node' in $.node_roles) or
+         ('primary-murano-node' in $.node_roles)) or
+      not $.murano.enabled) and changedAny($.get('detach-murano'),
+      $.network_metadata.vips, $.get('region', 'RegionOne'),
+      $.public_ssl, $.get('use_ssl'))
   required_for: [murano-controller-end]
   requires: [primary-keystone, keystone]
   cross-depends:
@@ -52,14 +76,17 @@
     puppet_manifest: manifests/murano_keystone.pp
     puppet_modules: /etc/puppet/modules:modules
     timeout: 1800
-  # reexecute_on is needed for scale-down operations
-  reexecute_on:
-    - deploy_changes
 
 - id: murano-database
-  version: 2.0.0
+  version: 2.1.0
   type: puppet
   groups: ['primary-controller']
+  condition:
+    yaql_exp: >
+      $.get('detach-murano', {}).get('metadata', {}).get('enabled', false) and
+      not $.murano.enabled and changedAny(
+      $.network_metadata.nodes.values().where($.fqdn = new($.fqdn)),
+      $.murano, $.mysql, $.network_metadata.vips, $.get('database_vip'))
   cross-depends:
     - name: /(primary-)?database/
   required_for: [murano-controller-end]
@@ -68,35 +95,39 @@
     puppet_manifest: manifests/murano_db.pp
     puppet_modules: /etc/puppet/modules:modules
     timeout: 1800
-  # reexecute_on is needed for scale-down operations
-  reexecute_on:
-    - deploy_changes
 
 - id: murano-dashboard
-  version: 2.0.0
+  version: 2.1.0
   type: puppet
   groups: ['primary-controller','controller']
   required_for: [murano-controller-end]
   requires: [horizon]
+  condition:
+    yaql_exp: >
+      $.get('detach-murano', {}).get('metadata', {}).get('enabled', false) and
+      changedAny($.get('detach-murano').murano_glance_artifacts,
+      $.get('detach-murano').murano_repo_url)
   parameters:
     puppet_manifest: manifests/murano_dashboard.pp
     puppet_modules: /etc/puppet/modules:modules
     timeout: 1800
-  # reexecute_on is needed for scale-down operations
-  reexecute_on:
-    - deploy_changes
 
 - id: murano-controller-end
-  version: 2.0.0
+  version: 2.1.0
   type: skipped
   groups: ['primary-controller','controller']
   required_for: [deploy_end]
   requires: []
 
 - id: murano-update-openrc
-  version: 2.0.0
+  version: 2.1.0
   type: puppet
   groups: ['primary-controller', 'controller']
+  condition:
+    yaql_exp: >
+      $.get('detach-murano', {}).get('metadata', {}).get('enabled', false) and
+      changedAny($.get('detach-murano').murano_glance_artifacts,
+      $.get('detach-murano').murano_repo_url)
   required_for: [murano-controller-end]
   requires: [primary-keystone, keystone]
   cross-depends:
@@ -105,31 +136,45 @@
     puppet_manifest: manifests/update_openrc.pp
     puppet_modules: /etc/puppet/modules
     timeout: 120
-  # reexecute_on is needed for scale-down operations
-  reexecute_on:
-    - deploy_changes
 
 - id: murano-haproxy
-  version: 2.0.0
+  version: 2.1.0
   type: puppet
   groups: ['primary-controller', 'controller']
   required_for: [murano-controller-end]
   requires: [deploy_start, primary-cluster-haproxy, cluster-haproxy]
+  condition:
+    yaql_exp: >
+      $.get('detach-murano', {}).get('metadata', {}).get('enabled', false) and
+      ($.network_metadata.nodes.values().any(
+         ('murano-node' in $.node_roles) or
+         ('primary-murano-node' in $.node_roles)) or
+      not $.murano.enabled) and changedAny($.get('detach-murano'),
+      $.public_ssl, $.get('use_ssl'), $.get('external_lb'),
+      $.network_metadata.nodes.values().where(
+         ('murano-node' in $.node_roles) or
+         ('primary-murano-node' in $.node_roles)),
+      $.network_metadata.vips)
   cross-depends:
     - name: /(primary-)?cluster-haproxy/
+      role: self
+    # prevent update of base haproxy murano after updating plugin haproxy murano
+    - name: openstack-haproxy-murano
       role: self
   parameters:
     puppet_manifest: manifests/murano_haproxy.pp
     puppet_modules: /etc/puppet/modules
     timeout: 300
-  # reexecute_on is needed for scale-down operations
-  reexecute_on:
-    - deploy_changes
 
 - id: murano-logging
-  version: 2.0.0
+  version: 2.1.0
   type: puppet
-  groups: ['primary-murano-node', 'murano-node']
+  groups: ['primary-controller', 'controller', 'primary-murano-node', 'murano-node']
+  condition:
+    yaql_exp: >
+      $.get('detach-murano', {}).get('metadata', {}).get('enabled', false) and
+      ($.roles.any($.matches('(primary-)?murano-node')) or
+      not ($.murano.enabled or $.roles.any($.matches('(primary-)?murano-node'))))
   required_for: [murano-services]
   requires: [logging]
   parameters:
@@ -138,9 +183,20 @@
     timeout: 1800
 
 - id: murano-services
-  version: 2.0.0
+  version: 2.1.0
   type: puppet
-  groups: ['primary-murano-node', 'murano-node']
+  groups: ['primary-controller', 'controller', 'primary-murano-node', 'murano-node']
+  condition:
+    yaql_exp: >
+      $.get('detach-murano', {}).get('metadata', {}).get('enabled', false) and
+      and changedAny($.get('detach-murano'), $.rabbit, $.ceilometer,
+      $.quantum_settings, $.network_metadata.vips, $.get('database_vip'),
+      $.get('region', 'RegionOne'), $.quantum, $.network_metadata,
+      $.get('syslog_log_facility_murano'), $.debug,
+      $.get('default_log_levels'), $.get('use_syslog'),
+      $.get('use_stderr'), $.get('rabbit_ha_queues'), $.get('amqp_port'),
+      $.get('amqp_hosts'), $.external_dns, $.public_ssl, $.get('use_ssl'),
+      $.get('kombu_compression'), $.get('external_lb'), $.get('keystone_endpoint'))
   required_for: [deploy_end]
   requires: [hosts]
   cross-depends:
@@ -151,9 +207,13 @@
     timeout: 3600
 
 - id: murano-node-rabbitmq
-  version: 2.0.0
+  version: 2.1.0
   type: puppet
-  groups: ['primary-murano-node', 'murano-node']
+  groups: ['primary-controller', 'controller', 'primary-murano-node', 'murano-node']
+  condition:
+    yaql_exp: >
+      $.get('detach-murano', {}).get('metadata', {}).get('enabled', false) and
+      and changedAny($.get('detach-murano'), $.rabbit)
   required_for: [murano-services]
   requires: [hosts]
   parameters:
@@ -162,13 +222,42 @@
     timeout: 1800
 
 - id: murano-node-cfapi
-  version: 2.0.0
+  version: 2.1.0
   type: puppet
-  groups: ['primary-murano-node', 'murano-node']
+  groups: ['primary-controller', 'controller', 'primary-murano-node', 'murano-node']
+  condition:
+    yaql_exp: >
+      $.get('detach-murano', {}).get('murano_cfapi', false) and
+      ($.roles.any($.matches('(primary-)?murano-node')) or
+      (not $.roles.any($.matches('(primary-)?murano-node')) and
+      $.roles.any($.matches('(primary-)?controller')))) and changedAny($.public_ssl,
+      $.network_metadata.vips, $.get('use_ssl'), $.network_metadata,
+      $.get('external_lb'))
   required_for: [deploy_end]
   requires: [murano-services]
   parameters:
     puppet_manifest: manifests/murano_cfapi.pp
     puppet_modules: /etc/puppet/modules:modules
     timeout: 3600
-  condition: "settings:detach-murano.murano_cfapi.value == true"
+
+# skip base murano tasks
+- id: murano
+  type: skipped
+
+- id: murano-db
+  type: skipped
+
+- id: murano-keystone
+  type: skipped
+
+- id: murano-rabbitmq
+  type: skipped
+
+- id: murano-cfapi
+  type: skipped
+
+- id: murano-cfapi-keystone
+  type: skipped
+
+- id: upload_murano_package
+  type: skipped

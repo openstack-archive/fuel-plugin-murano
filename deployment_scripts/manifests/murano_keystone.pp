@@ -1,6 +1,7 @@
 notice('MURANO PLUGIN: murano_keystone.pp')
 
-$murano_hash       = hiera_hash('murano', {})
+$murano_hash = hiera_hash('murano', {})
+
 $murano_cfapi_hash = hiera_hash('murano_cfapi', {})
 $public_ip         = hiera('public_vip')
 $management_ip     = hiera('management_vip')

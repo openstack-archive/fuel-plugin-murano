@@ -9,7 +9,7 @@ $neutron_config             = hiera_hash('neutron_config', {})
 $public_ssl_hash            = hiera_hash('public_ssl', {})
 $ssl_hash                   = hiera_hash('use_ssl', {})
 $external_dns               = hiera_hash('external_dns', {})
-$primary_murano             = roles_include(['primary-murano-node'])
+$primary_murano             = roles_include(['primary-murano-node', 'primary-controller'])
 $public_ip                  = hiera('public_vip')
 $database_ip                = hiera('database_vip')
 $management_ip              = hiera('management_vip')
@@ -87,16 +87,13 @@ firewall { $firewall_rule :
 
 if $murano_plugins and has_key($murano_plugins, 'glance_artifacts_plugin') and $murano_plugins['glance_artifacts_plugin']['enabled'] {
   $packages_service = 'glance'
-
-  package {'murano-glance-artifacts-plugin':
-    ensure  => installed,
-  }
 } else {
   $packages_service = 'murano'
 }
 
 class { '::murano' :
   verbose             => $verbose,
+  package_ensure      => 'latest',
   debug               => $debug,
   use_syslog          => $use_syslog,
   use_stderr          => $use_stderr,
@@ -130,16 +127,17 @@ class { '::murano' :
 }
 
 class { '::murano::api':
-  host    => $api_bind_host,
-  port    => $api_bind_port,
+  host           => $api_bind_host,
+  port           => $api_bind_port,
+  package_ensure => 'latest',
 }
-
-include ::murano::engine
-include ::murano::client
 
 if $primary_murano {
   murano::application { 'io.murano' : }
 }
+
+include ::murano::engine
+include ::murano::client
 
 $haproxy_stats_url = "http://${management_ip}:10000/;csv"
 $murano_protocol = get_ssl_property($ssl_hash, {}, 'murano', 'internal', 'protocol', 'http')

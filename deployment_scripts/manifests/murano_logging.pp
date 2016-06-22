@@ -1,7 +1,9 @@
-notice('MURANO PLUGIN: logging-murano.pp')
+notice('MURANO PLUGIN: murano_logging.pp')
 
-$content=':syslogtag, contains, "murano" -/var/log/murano-all.log\n
-### stop further processing for the matched entries\n
+$murano_hash = hiera_hash('murano', {})
+
+$content=':syslogtag, contains, "murano" -/var/log/murano-all.log
+### stop further processing for the matched entries
 & ~'
 
 include ::rsyslog::params
