@@ -4,5 +4,3 @@ murano-node:
   has_primary: true
   public_ip_required: false
   weight: 100
-  limits:
-    min: 1

@@ -1,4 +1,4 @@
-notice('MODULAR: murano/rabbitmq.pp')
+notice('MODULAR: murano_rabbitmq.pp')
 
 $rabbit_hash = hiera_hash('rabbit', {})
 $murano_hash = hiera_hash('murano', {})
@@ -13,14 +13,13 @@ if !$rabbit_hash['password'] {
 $rabbit_user          = pick($rabbit_hash['user'], 'nova')
 $rabbit_password      = $rabbit_hash['password']
 $rabbit_vhost         = $murano_hash['rabbit']['vhost']
-
 $rabbit_node_name     = 'murano@localhost'
 $rabbit_service_name  = 'murano-rabbitmq'
 
 #################################################################
 
 package { 'murano-rabbitmq':
-  ensure => present,
+  ensure => latest,
 }
 
 service { $rabbit_service_name :
