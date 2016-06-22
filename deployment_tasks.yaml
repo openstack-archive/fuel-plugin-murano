@@ -27,7 +27,7 @@
       type: parallel
 
 - id: hiera-murano-override
-  version: 2.0.0
+  version: 2.1.0
   type: puppet
   groups: ['primary-controller', 'controller', 'primary-murano-node', 'murano-node']
   required_for: [logging]
@@ -40,8 +40,22 @@
   reexecute_on:
     - deploy_changes
 
+- id: pin-murano-plugin-repo
+  version: 2.1.0
+  type: puppet
+  groups: ['primary-controller', 'controller', 'primary-murano-node', 'murano-node' ]
+  required_for: [hiera-murano-override]
+  requires: [globals]
+  parameters:
+    puppet_manifest: manifests/pin_murano_plugin_repo.pp
+    puppet_modules: /etc/puppet/modules
+    timeout: 120
+  # reexecute_on is needed for scale-down operations
+  reexecute_on:
+    - deploy_changes
+
 - id: murano-keystone-endpoints
-  version: 2.0.0
+  version: 2.1.0
   type: puppet
   groups: ['primary-controller']
   required_for: [murano-controller-end]
@@ -57,7 +71,7 @@
     - deploy_changes
 
 - id: murano-database
-  version: 2.0.0
+  version: 2.1.0
   type: puppet
   groups: ['primary-controller']
   cross-depends:
@@ -73,7 +87,7 @@
     - deploy_changes
 
 - id: murano-dashboard
-  version: 2.0.0
+  version: 2.1.0
   type: puppet
   groups: ['primary-controller','controller']
   required_for: [murano-controller-end]
@@ -87,14 +101,14 @@
     - deploy_changes
 
 - id: murano-controller-end
-  version: 2.0.0
+  version: 2.1.0
   type: skipped
   groups: ['primary-controller','controller']
   required_for: [deploy_end]
   requires: []
 
 - id: murano-update-openrc
-  version: 2.0.0
+  version: 2.1.0
   type: puppet
   groups: ['primary-controller', 'controller']
   required_for: [murano-controller-end]
@@ -110,7 +124,7 @@
     - deploy_changes
 
 - id: murano-haproxy
-  version: 2.0.0
+  version: 2.1.0
   type: puppet
   groups: ['primary-controller', 'controller']
   required_for: [murano-controller-end]
@@ -127,9 +141,9 @@
     - deploy_changes
 
 - id: murano-logging
-  version: 2.0.0
+  version: 2.1.0
   type: puppet
-  groups: ['primary-murano-node', 'murano-node']
+  groups: ['primary-controller', 'controller', 'primary-murano-node', 'murano-node']
   required_for: [murano-services]
   requires: [logging]
   parameters:
@@ -138,9 +152,9 @@
     timeout: 1800
 
 - id: murano-services
-  version: 2.0.0
+  version: 2.1.0
   type: puppet
-  groups: ['primary-murano-node', 'murano-node']
+  groups: ['primary-controller', 'controller', 'primary-murano-node', 'murano-node']
   required_for: [deploy_end]
   requires: [hosts]
   cross-depends:
@@ -151,9 +165,9 @@
     timeout: 3600
 
 - id: murano-node-rabbitmq
-  version: 2.0.0
+  version: 2.1.0
   type: puppet
-  groups: ['primary-murano-node', 'murano-node']
+  groups: ['primary-controller', 'controller', 'primary-murano-node', 'murano-node']
   required_for: [murano-services]
   requires: [hosts]
   parameters:
@@ -162,13 +176,35 @@
     timeout: 1800
 
 - id: murano-node-cfapi
-  version: 2.0.0
+  version: 2.1.0
   type: puppet
-  groups: ['primary-murano-node', 'murano-node']
+  groups: ['primary-controller', 'controller', 'primary-murano-node', 'murano-node']
   required_for: [deploy_end]
   requires: [murano-services]
   parameters:
     puppet_manifest: manifests/murano_cfapi.pp
     puppet_modules: /etc/puppet/modules:modules
     timeout: 3600
-  condition: "settings:detach-murano.murano_cfapi.value == true"
+  condition: "settings:murano-plugin.murano_cfapi.value == true"
+
+# skip base murano tasks
+- id: murano
+  type: skipped
+
+- id: murano-db
+  type: skipped
+
+- id: murano-keystone
+  type: skipped
+
+- id: murano-rabbitmq
+  type: skipped
+
+- id: murano-cfapi
+  type: skipped
+
+- id: murano-cfapi-keystone
+  type: skipped
+
+- id: upload_murano_package
+  type: skipped

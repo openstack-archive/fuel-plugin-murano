@@ -1,4 +1,4 @@
-name: detach-murano
+name: murano-plugin
 title: Murano plugin
 version: '1.0.0'
 description: Install Murano applications
