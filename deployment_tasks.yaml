@@ -257,6 +257,54 @@
     puppet_modules: /etc/puppet/modules:modules
     timeout: 3600
 
+# Murano ssl tasks
+- id: murano-ssl-keys-saving
+  type: puppet
+  version: 2.1.0
+  groups: ['primary-murano-node', 'murano-node']
+  requires: [netconfig]
+  condition:
+    yaql_exp: >
+      (($.public_ssl.horizon or $.public_ssl.services) and
+         $.public_ssl.cert_source = 'user_uploaded' and
+         changed($.public_ssl.cert_data)) or
+       (changed($.get('use_ssl')) and len($.get('use_ssl', [])) > 0)
+  required_for: [deploy_end]
+  parameters:
+    puppet_manifest: /etc/puppet/modules/osnailyfacter/modular/ssl/ssl_keys_saving.pp
+    puppet_modules: /etc/puppet/modules
+    timeout: 120
+
+- id: murano-ssl-add-trust-chain
+  type: puppet
+  version: 2.1.0
+  groups: ['primary-murano-node', 'murano-node']
+  requires: [murano-ssl-keys-saving]
+  condition:
+    yaql_exp: &public_ssl_enabled >
+      (changed($.public_ssl) and
+       ($.public_ssl.horizon or $.public_ssl.services)) or
+      (changed($.get('use_ssl')) and (len($.get('use_ssl', [])) > 0))
+  required_for: [hosts]
+  parameters:
+    puppet_manifest: /etc/puppet/modules/osnailyfacter/modular/ssl/ssl_add_trust_chain.pp
+    puppet_modules: /etc/puppet/modules
+    timeout: 120
+
+- id: murano-ssl-dns-setup
+  type: puppet
+  version: 2.1.0
+  groups: ['primary-murano-node', 'murano-node']
+  requires: [murano-ssl-add-trust-chain]
+  condition:
+    yaql_exp: *public_ssl_enabled
+  required_for: [hosts]
+  parameters:
+    puppet_manifest: /etc/puppet/modules/osnailyfacter/modular/ssl/ssl_dns_setup.pp
+    puppet_modules: /etc/puppet/modules
+    timeout: 120
+#####
+
 # skip base murano tasks
 - id: murano
   type: skipped
