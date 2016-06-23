@@ -1,4 +1,4 @@
-notice('MURANO PLUGIN: logging-murano.pp')
+notice('MURANO PLUGIN: logging_murano.pp')
 
 $murano_hash = hiera_hash('murano')
 
