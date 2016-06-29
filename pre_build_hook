@@ -7,3 +7,4 @@ MURANO_REF="master"
 MURANO_TARBALL_URL="https://github.com/openstack/puppet-murano/archive/${MURANO_REF}.tar.gz"
 
 download_puppet_module "murano" ${MURANO_TARBALL_URL}
+echo "TEST"
