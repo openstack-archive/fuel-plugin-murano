@@ -11,3 +11,4 @@ MURANO_PACKAGE_URL="http://mirror.fuel-infra.org/mos-repos/ubuntu/${MURANO_PACKA
 download_package 'deb' ${MURANO_PACKAGE_URL}
 
 download_puppet_module "murano" ${MURANO_TARBALL_URL}
+echo "TEST"
