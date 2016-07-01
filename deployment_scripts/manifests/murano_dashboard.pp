@@ -1,6 +1,6 @@
 notice('MURANO PLUGIN: murano_dashboard.pp')
 
-$murano_hash    = hiera_hash('murano', {})
+$murano_hash    = hiera_hash('murano_plugin', {})
 $murano_plugins = $murano_hash['plugins']
 $repository_url = has_key($murano_hash, 'murano_repo_url') ? {
   true    => $murano_hash['murano_repo_url'],

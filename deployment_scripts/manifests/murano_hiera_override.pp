@@ -42,8 +42,7 @@ if $murano_plugin {
 
   ###################
   $calculated_content = inline_template('
-murano:
-  murano_old_config: <% @murano_base_hash %>
+murano_plugin:
   murano_standalone: <%= @murano_role_exists %>
   murano_ipaddresses:
 <%
@@ -64,7 +63,7 @@ murano:
   plugins:
     glance_artifacts_plugin:
       enabled: <%= @murano_glance_artifacts %>
-murano_cfapi:
+murano_cfapi_plugin:
   enabled: <%= @murano_cfapi_enabled %>
 syslog_log_facility_murano: <%= @syslog_log_facility_murano %>
 "murano::logging::default_log_levels":

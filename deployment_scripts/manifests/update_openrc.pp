@@ -1,6 +1,6 @@
 notice('MURANO PLUGIN: update_openrc.pp')
 
-$murano_hash     = hiera_hash('murano', {})
+$murano_hash     = hiera_hash('murano_plugin', {})
 $murano_plugins  = $murano_hash['plugins']
 $murano_repo_url = $murano_hash['murano_repo_url']
 

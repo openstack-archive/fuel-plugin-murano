@@ -1,7 +1,7 @@
 notice('MODULAR: murano_rabbitmq.pp')
 
 $rabbit_hash = hiera_hash('rabbit', {})
-$murano_hash = hiera_hash('murano', {})
+$murano_hash = hiera_hash('murano_plugin', {})
 
 if $rabbit_hash == {} {
   fail('No rabbit_hash defined')

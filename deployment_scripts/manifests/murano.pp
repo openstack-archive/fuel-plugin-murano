@@ -2,7 +2,7 @@ notice('MURANO PLUGIN: murano.pp')
 
 prepare_network_config(hiera_hash('network_scheme', {}))
 
-$murano_hash                = hiera_hash('murano', {})
+$murano_hash                = hiera_hash('murano_plugin', {})
 $murano_plugins             = pick($murano_hash['plugins'], {})
 $rabbit_hash                = hiera_hash('rabbit', {})
 $neutron_config             = hiera_hash('neutron_config', {})

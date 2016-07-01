@@ -1,7 +1,7 @@
 notice('MURANO PLUGIN: murano_haproxy.pp')
 
-$murano_hash        = hiera_hash('murano',{})
-$murano_cfapi_hash  = hiera_hash('murano_cfapi', {})
+$murano_hash        = hiera_hash('murano_plugin',{})
+$murano_cfapi_hash  = hiera_hash('murano_cfapi_plugin', {})
 $public_ssl_hash    = hiera_hash('public_ssl', {})
 $ssl_hash           = hiera_hash('use_ssl', {})
 $external_lb        = hiera('external_lb', false)

@@ -1,7 +1,7 @@
 notice('MURANO PLUGIN: murano_keystone.pp')
 
-$murano_hash       = hiera_hash('murano', {})
-$murano_cfapi_hash = hiera_hash('murano_cfapi', {})
+$murano_hash       = hiera_hash('murano_plugin', {})
+$murano_cfapi_hash = hiera_hash('murano_cfapi_plugin', {})
 $public_ip         = hiera('public_vip')
 $management_ip     = hiera('management_vip')
 $region            = hiera('region', 'RegionOne')
