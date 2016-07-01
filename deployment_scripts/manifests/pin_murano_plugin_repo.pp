@@ -7,7 +7,7 @@ $plugin_version = $detach_murano['metadata']['plugin_version']
 $pins =  { "detach-murano-${plugin_version}" =>
               {
                  'priority' => 1200,
-                 'label'    => 'murano-plugin',
+                 'label'    => 'detach-murano',
               },
           }
 
