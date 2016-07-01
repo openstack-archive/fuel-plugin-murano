@@ -1,0 +1,9 @@
+Code-Review+1: Alex Schultz <aschultz@mirantis.com>
+Code-Review+2: Ivan Berezovskiy <iberezovskiy@mirantis.com>
+Workflow+1: Ivan Berezovskiy <iberezovskiy@mirantis.com>
+Verified+2: Jenkins
+Submitted-by: Jenkins
+Submitted-at: Fri, 01 Jul 2016 16:09:40 +0000
+Reviewed-on: https://review.openstack.org/336583
+Project: openstack/fuel-plugin-murano
+Branch: refs/heads/master
