@@ -6,8 +6,12 @@ set -eux
 MURANO_REF="stable/mitaka"
 MURANO_PACKAGE_RELEASE='9.0'
 MURANO_TARBALL_URL="https://github.com/openstack/puppet-murano/archive/${MURANO_REF}.tar.gz"
-MURANO_PACKAGE_URL="http://mirror.fuel-infra.org/mos-repos/ubuntu/${MURANO_PACKAGE_RELEASE}/pool/main/m/murano/"
+MURANO_PACKAGE_URL=${MURANO_PACKAGE_URL:-"http://mirror.fuel-infra.org/extras/murano-plugin-repos/ubuntu/${MURANO_PACKAGE_RELEASE}/pool/main/m/murano/"}
+# Since murano need some dependencies, which not included into mos-9.0 - we need to download and deliver them.
+MURANO_DEP_PACKAGES_URL=${MURANO_DEP_PACKAGES_URL:-"http://mirror.fuel-infra.org/extras/murano-plugin-repos/ubuntu/${MURANO_PACKAGE_RELEASE}/pool/main/p/python-osc-lib/"}
 
 download_package 'deb' ${MURANO_PACKAGE_URL}
+
+download_package 'deb' ${MURANO_DEP_PACKAGES_URL}
 
 download_puppet_module "murano" ${MURANO_TARBALL_URL}
