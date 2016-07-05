@@ -6,7 +6,7 @@ set -eux
 MURANO_REF="stable/mitaka"
 MURANO_PACKAGE_RELEASE='9.0'
 MURANO_TARBALL_URL="https://github.com/openstack/puppet-murano/archive/${MURANO_REF}.tar.gz"
-MURANO_PACKAGE_URL="http://mirror.fuel-infra.org/mos-repos/ubuntu/${MURANO_PACKAGE_RELEASE}/pool/main/m/murano/"
+MURANO_PACKAGE_URL=${MURANO_PACKAGE_URL:-"http://mirror.fuel-infra.org/murano-plugin-repos/ubuntu/${MURANO_PACKAGE_RELEASE}/pool/main/m/murano/"}
 
 download_package 'deb' ${MURANO_PACKAGE_URL}
 
