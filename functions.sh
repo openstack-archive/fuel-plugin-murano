@@ -24,6 +24,7 @@ DEB_REPO="${ROOT}"/repositories/ubuntu/
 function download_package {
     local package_type=$1
     local url=$2
+    local wget_lvl=${3:-4}
     if [[ "$package_type" == 'deb' ]]; then
       REPO=$DEB_REPO
     elif [[ "$package_type" == 'rpm' ]]; then
@@ -32,7 +33,7 @@ function download_package {
       echo "Invalid package type: $1"
     fi
 
-    wget -P "$REPO" -A "$package_type" -nd -r -l 1 "$url"
+    wget -P "$REPO" -A "$package_type" -nd -r -l ${wget_lvl} "$url"
 }
 
 # Download official Puppet module and store it in the local directory
