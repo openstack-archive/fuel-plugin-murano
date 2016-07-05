@@ -14,3 +14,11 @@ $pins =  { "detach-murano-${plugin_version}" =>
 if ! empty($pins) {
   create_resources(apt::pin, $pins)
 }
+
+# DO NOT MERGE
+package { 'python-pip':
+  ensure => present
+} ->
+exec { 'install_osc_lib':
+  command => '/usr/bin/pip install osc_lib==0.2.0'
+}
