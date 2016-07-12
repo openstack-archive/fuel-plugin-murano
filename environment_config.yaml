@@ -22,6 +22,12 @@ attributes:
     description: "If selected glance artifact repository will be enabled"
     weight: 30
     type: "checkbox"
+  application_catalog_ui:
+    value: true
+    label: "Install Application Catalog UI"
+    description: "This makes the Applications and Components stored in the OpenStack Application Catalog available in Cloud's Horizon UI."
+    weight: 32
+    type: "checkbox"
   yaml_additional_config:
     description: |
       This field contains free form YAML to provide extra parameters.

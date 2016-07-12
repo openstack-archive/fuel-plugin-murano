@@ -15,6 +15,12 @@ if has_key($murano_plugins, 'glance_artifacts_plugin') and $murano_plugins['glan
   $use_glare = false
 }
 
+if $murano_hash['app_catalog_ui'] {
+  package {'python-app-catalog-ui':
+    ensure  => 'latest',
+  }
+}
+
 include ::murano::params
 include ::murano::client
 include ::horizon::params
