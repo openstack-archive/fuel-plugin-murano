@@ -39,6 +39,7 @@ if $murano_plugin {
   $murano_cfapi_enabled       = $murano_plugin['murano_cfapi']
   $murano_repo_url            = $murano_plugin['murano_repo_url']
   $murano_glance_artifacts    = $murano_plugin['murano_glance_artifacts']
+  $application_catalog_ui     = $murano_plugin['application_catalog_ui']
   $syslog_log_facility_murano = hiera('syslog_log_facility_murano', 'LOG_LOCAL0')
   $default_log_levels         = hiera('default_log_levels')
 
@@ -69,6 +70,7 @@ murano_plugin:
       enabled: <%= @murano_glance_artifacts %>
 murano_cfapi_plugin:
   enabled: <%= @murano_cfapi_enabled %>
+app_catalog_ui: <%= @application_catalog_ui %>
 syslog_log_facility_murano: <%= @syslog_log_facility_murano %>
 "murano::logging::default_log_levels":
 <%

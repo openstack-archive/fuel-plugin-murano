@@ -2,6 +2,7 @@ notice('MURANO PLUGIN: murano_dashboard.pp')
 
 $murano_hash    = hiera_hash('murano_plugin', {})
 $murano_plugins = $murano_hash['plugins']
+$app_catalog_ui = hiera('app_catalog_ui', false)
 $repository_url = has_key($murano_hash, 'murano_repo_url') ? {
   true    => $murano_hash['murano_repo_url'],
   default => 'http://storage.apps.openstack.org',
@@ -13,6 +14,12 @@ if has_key($murano_plugins, 'glance_artifacts_plugin') and $murano_plugins['glan
   }
 } else {
   $use_glare = false
+}
+
+if $app_catalog_ui {
+  package {'python-app-catalog-ui':
+    ensure  => 'latest',
+  }
 }
 
 include ::murano::params
