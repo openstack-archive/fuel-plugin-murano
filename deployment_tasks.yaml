@@ -8,6 +8,7 @@
     - globals
     - tools
     - logging
+    - hiera_default_route
     - netconfig
     - hosts
   required_for: [deploy_end]
