@@ -29,10 +29,12 @@ if $murano_plugin {
     $murano_nodes_ips   = values($murano_address_map)
     $murano_nodes_names = keys($murano_address_map)
   }
-  $murano_db_password   = pick($settings_hash['murano_db_password'], $murano_base_hash['db_password'])
-  $murano_user_password = pick($settings_hash['murano_user_password'], $murano_base_hash['user_password'])
-  $murano_rabbit_host   = pick($settings_hash['murano_rabbit_vhost'], $murano_base_hash['rabbit']['vhost'])
-  $murano_rabbit_port   = pick($settings_hash['murano_rabbit_port'], $murano_base_hash['rabbit']['port'])
+  $murano_db_password     = pick($settings_hash['murano_db_password'], $murano_base_hash['db_password'])
+  $murano_user_password   = pick($settings_hash['murano_user_password'], $murano_base_hash['user_password'])
+  $murano_rabbit_user     = pick($settings_hash['murano_rabbit_user'], 'murano')
+  $murano_rabbit_password = pick($settings_hash['murano_rabbit_password'], $murano_base_hash['rabbit_password'])
+  $murano_rabbit_host     = pick($settings_hash['murano_rabbit_vhost'], $murano_base_hash['rabbit']['vhost'])
+  $murano_rabbit_port     = pick($settings_hash['murano_rabbit_port'], $murano_base_hash['rabbit']['port'])
 
   $murano_cfapi_enabled       = $murano_plugin['murano_cfapi']
   $murano_repo_url            = $murano_plugin['murano_repo_url']
@@ -55,6 +57,8 @@ murano_plugin:
 %>    - <%= muranoname %>
 <% end -%>
   rabbit:
+    user: <%= @murano_rabbit_user %>
+    password: <%= @murano_rabbit_password %>
     vhost: <%= @murano_rabbit_host %>
     port: <%= @murano_rabbit_port %>
   db_password: <%= @murano_db_password %>

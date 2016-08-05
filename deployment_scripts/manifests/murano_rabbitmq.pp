@@ -1,17 +1,8 @@
 notice('MODULAR: murano_rabbitmq.pp')
 
-$rabbit_hash = hiera_hash('rabbit', {})
-$murano_hash = hiera_hash('murano_plugin', {})
-
-if $rabbit_hash == {} {
-  fail('No rabbit_hash defined')
-}
-if !$rabbit_hash['password'] {
-  fail('Rabbit password is not set')
-}
-
-$rabbit_user          = pick($rabbit_hash['user'], 'nova')
-$rabbit_password      = $rabbit_hash['password']
+$murano_hash          = hiera_hash('murano_plugin', {})
+$rabbit_user          = $murano_hash['rabbit']['user']
+$rabbit_password      = $murano_hash['rabbit']['password']
 $rabbit_vhost         = $murano_hash['rabbit']['vhost']
 $rabbit_node_name     = 'murano@localhost'
 $rabbit_service_name  = 'murano-rabbitmq'
