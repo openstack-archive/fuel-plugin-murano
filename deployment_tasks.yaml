@@ -71,7 +71,7 @@
     - name: keystone
   parameters:
     puppet_manifest: manifests/murano_keystone.pp
-    puppet_modules: /etc/puppet/modules:modules
+    puppet_modules: modules:/etc/puppet/modules
     timeout: 1800
 
 - id: murano-database
@@ -91,7 +91,7 @@
   requires: [primary-database, database]
   parameters:
     puppet_manifest: manifests/murano_db.pp
-    puppet_modules: /etc/puppet/modules:modules
+    puppet_modules: modules:/etc/puppet/modules
     timeout: 1800
 
 - id: murano-dashboard
@@ -116,7 +116,7 @@
       $.nova_quota, $.debug, $.get('verbose'), $.get('apache_ports'))
   parameters:
     puppet_manifest: manifests/murano_dashboard.pp
-    puppet_modules: /etc/puppet/modules:modules
+    puppet_modules: modules:/etc/puppet/modules
     timeout: 1800
 
 - id: murano-controller-end
@@ -214,7 +214,7 @@
     - name: murano-controller-end
   parameters:
     puppet_manifest: manifests/murano.pp
-    puppet_modules: /etc/puppet/modules:modules
+    puppet_modules: modules:/etc/puppet/modules
     timeout: 3600
 
 - id: murano-node-rabbitmq
@@ -233,7 +233,7 @@
   requires: [hosts]
   parameters:
     puppet_manifest: manifests/murano_rabbitmq.pp
-    puppet_modules: /etc/puppet/modules:modules
+    puppet_modules: modules:/etc/puppet/modules
     timeout: 1800
 
 - id: murano-node-cfapi
@@ -253,7 +253,7 @@
   requires: [murano-services]
   parameters:
     puppet_manifest: manifests/murano_cfapi.pp
-    puppet_modules: /etc/puppet/modules:modules
+    puppet_modules: modules:/etc/puppet/modules
     timeout: 3600
 
 # Murano ssl tasks
@@ -320,7 +320,7 @@
     - name: upload_cirros
   parameters:
     puppet_manifest: manifests/import_murano_package.pp
-    puppet_modules: /etc/puppet/modules:modules
+    puppet_modules: modules:/etc/puppet/modules
     timeout: 180
 
 # skip base murano tasks
