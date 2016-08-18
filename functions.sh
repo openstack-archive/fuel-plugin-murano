@@ -42,3 +42,19 @@ function download_puppet_module {
     mkdir -p "${MODULES_DIR}"/"$1"
     wget -qO- "$2" | tar -C "${MODULES_DIR}/$1" --strip-components=1 -xz
 }
+
+# Generate version file in format:
+# Build: $build_date
+# FUEL_PLUGIN_COMMIT=$sha
+# $pkg_name=$pkg_version
+function generate_version_file {
+    local version_file="${1:-build_version}"
+    local tmp_file=$(mktemp)
+    echo "# Build: $(date +%Y-%m-%d-%H-%M-%S)"  >> "${version_file}"
+    echo "FUEL_PLUGIN_COMMIT=$(git rev-parse HEAD)" >> "${version_file}"
+    while read -d '' -r pkg; do
+        dpkg-deb -I "${pkg}"| awk '/Package:/{name=$2}/Version:/{ver=$2;print name"="ver}' >> "${tmp_file}"
+    done < <(find "repositories/ubuntu" -name '*.deb' -print0)
+    cat "${tmp_file}" | sort >> "${version_file}"
+    rm -vf "${tmp_file}"
+}
