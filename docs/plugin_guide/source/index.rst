@@ -2,9 +2,10 @@
 Murano Plugin for Fuel Guide
 ============================
 
-Murano plugin for Fuel is ...
+Murano plugin for Fuel is a plugin to install Murano Application
+Catalog Service for OpenStack.
 
-This guide documents the ... version of Murano plugin.
+This guide documents the 1.0.0 version of Murano plugin.
 
 .. toctree::
    :maxdepth: 2
@@ -12,6 +13,7 @@ This guide documents the ... version of Murano plugin.
    intro
    install
    configure
+   update
    licenses
    appendix
 
