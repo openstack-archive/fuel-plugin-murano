@@ -19,7 +19,7 @@ Typically, you install a Fuel plugin before you deploy an OpenStack environment.
 
    .. code-block:: console
 
-      # scp <plugin filename> root@fuel-master:/tmp
+      # scp detach-murano-<plugin_version> root@fuel-master:/tmp
 
 #. Log into Fuel Master node CLI as root.
 
@@ -27,7 +27,7 @@ Typically, you install a Fuel plugin before you deploy an OpenStack environment.
 
    .. code-block:: console
 
-      # fuel plugins --install <plugin filename>
+      # fuel plugins --install detach-murano-<plugin_version>
 
 #. Verify that the plugin is installed correctly:
 
@@ -36,7 +36,7 @@ Typically, you install a Fuel plugin before you deploy an OpenStack environment.
      # fuel plugins
      id | name          | version | package_version
      ---|---------------|---------|----------------
-     1  | <name>        |<version>| <version>
+     1  | detach-murano |<version>| <version>
 
 #. Proceed to :ref:`pg-configure`.
 
