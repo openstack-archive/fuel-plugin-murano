@@ -37,6 +37,7 @@ attributes:
       #Uncomment to add custom settings
       #murano_db_password: database_password
       #murano_user_password: keystone_user_password
+      #murano_rabbit_user: murano
+      #murano_rabbit_password: rabbit_password
       #murano_rabbit_vhost: "/"
-      #murano_rabbit_port: 55572
     label: "Additional config"
