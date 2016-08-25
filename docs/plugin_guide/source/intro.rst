@@ -31,7 +31,4 @@ Fuel                    9.0
 Limitations
 ~~~~~~~~~~~
 
-Murano plugin has some known issues and limitations of usage:
-
-* ...
-* ...
+Murano plugin has not any issues or limitations of usage.

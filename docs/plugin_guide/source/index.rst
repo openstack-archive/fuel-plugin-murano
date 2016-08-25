@@ -12,6 +12,7 @@ This guide documents the ... version of Murano plugin.
    intro
    install
    configure
+   update
    licenses
    appendix
 
