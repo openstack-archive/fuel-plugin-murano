@@ -1,17 +1,15 @@
 .. _overview:
 
-=========================
-Overview of Murano plugin
-=========================
+========
+Overview
+========
 
-Murano plugin provides functionality to <describe functionality of the plugin>.
-You can use Murano plugin to configure <describe use cases for the plugin,
-what problems>.
-
-The plugin includes the following components:
-
-* Component 1
-* Component 2
+Murano plugin for Fuel is a plugin to install the Application Catalog Service
+for OpenStack.
+Murano plugin provides flexibility for the OpenStack Application Catalog
+service by supporting multiple releases and versions (for some Fuel version).
+Also, the plugin provides the capability to detach Murano from the controller
+node as a separate node.
 
 .. _pg-prerequisites:
 
@@ -24,14 +22,30 @@ To use Murano plugin, verify that your environment meets the following prerequis
 Prerequisites           Version/Comment
 ======================= =================================
 Fuel                    9.0
-<component 1>
-<hardware>
 ======================= =================================
 
 Limitations
 ~~~~~~~~~~~
 
-Murano plugin has some known issues and limitations of usage:
+Murano plugin has no issues or limitations of usage.
 
-* ...
-* ...
+Licenses
+~~~~~~~~
+
+================= ============
+**Component**     **License**
+================= ============
+Murano plugin     Apache 2.0
+================= ============
+
+References
+~~~~~~~~~~
+
+For more information about Murano plugin for Fuel described in this document,
+see:
+
+* `Specification <https://specs.openstack.org/openstack/fuel-specs/specs/9.0/murano-fuel-plugin.html>`__
+
+* `Launchpad project <https://launchpad.net/fuel-plugin-murano>`__
+
+* `GitHub project <http://git.openstack.org/cgit/openstack/fuel-plugin-murano>`__
