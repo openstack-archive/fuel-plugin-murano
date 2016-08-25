@@ -135,3 +135,5 @@ include ::murano::engine
 include ::murano::client
 
 Firewall[$firewall_rule] -> Class['murano::api']
+
+class ::openstacklib::defaults {}

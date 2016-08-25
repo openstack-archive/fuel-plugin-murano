@@ -37,3 +37,5 @@ class { '::murano::cfapi' :
 }
 
 Firewall[$firewall_rule] -> Class['murano::cfapi']
+
+class ::openstacklib::defaults {}

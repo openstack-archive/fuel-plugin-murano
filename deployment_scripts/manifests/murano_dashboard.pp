@@ -41,3 +41,5 @@ class { '::murano::dashboard':
 }
 
 Concat<||> ~> Service['httpd']
+
+class ::openstacklib::defaults {}
