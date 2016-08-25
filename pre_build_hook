@@ -3,7 +3,7 @@ set -eux
 
 . "$(dirname "$(readlink -f "$0")")"/functions.sh
 
-MURANO_REF=${MURANO_REF:-'stable/mitaka'}
+MURANO_REF=${MURANO_REF:-'master'}
 MURANO_PACKAGE_RELEASE=${MURANO_PACKAGE_RELEASE:-'9.0'}
 MURANO_TARBALL_URL=${MURANO_TARBALL_URL:-"https://github.com/openstack/puppet-murano/archive/${MURANO_REF}.tar.gz"}
 
