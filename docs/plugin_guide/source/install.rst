@@ -1,11 +1,11 @@
 .. _pg-install:
 
-=====================
-Install Murano plugin
-=====================
+========================
+Installing Murano plugin
+========================
 
-Before you install Murano plugin, verify that your environment meets
-the requirements described in :ref:`pg-prerequisites`. You must have the Fuel
+Before you install Murano plugin, verify that your environment meets the
+requirements described in :ref:`pg-prerequisites`. You must have the Fuel
 Master node installed and configured before you can install the plugin.
 Typically, you install a Fuel plugin before you deploy an OpenStack environment.
 
@@ -19,15 +19,15 @@ Typically, you install a Fuel plugin before you deploy an OpenStack environment.
 
    .. code-block:: console
 
-      # scp <plugin filename> root@fuel-master:/tmp
+      # scp detach-murano-<plugin_version> root@fuel-master:/tmp
 
-#. Log into Fuel Master node CLI as root.
+#. Log in to the Fuel Master node CLI as root.
 
 #. Install the plugin by typing:
 
    .. code-block:: console
 
-      # fuel plugins --install <plugin filename>
+      # fuel plugins --install detach-murano-<plugin_version>
 
 #. Verify that the plugin is installed correctly:
 
@@ -36,7 +36,7 @@ Typically, you install a Fuel plugin before you deploy an OpenStack environment.
      # fuel plugins
      id | name          | version | package_version
      ---|---------------|---------|----------------
-     1  | <name>        |<version>| <version>
+     1  | detach-murano | 1.0.0   | 4.0.0
 
 #. Proceed to :ref:`pg-configure`.
 
