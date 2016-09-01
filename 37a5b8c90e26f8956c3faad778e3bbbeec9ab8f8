@@ -1,0 +1,12 @@
+Code-Review+2: Denis Egorenko <degorenko@mirantis.com>
+Code-Review+1: Maria Zlatkova <mzlatkova@mirantis.com>
+Code-Review+1: Olga Gusarenko <ogusarenko@mirantis.com>
+Code-Review+1: Aleksandr Kholkin <akholkin@mirantis.com>
+Code-Review+2: Kirill Zaitsev <kzaitsev@mirantis.com>
+Workflow+1: Kirill Zaitsev <kzaitsev@mirantis.com>
+Verified+2: Jenkins
+Submitted-by: Jenkins
+Submitted-at: Thu, 01 Sep 2016 10:41:24 +0000
+Reviewed-on: https://review.openstack.org/360494
+Project: openstack/fuel-plugin-murano
+Branch: refs/heads/master
