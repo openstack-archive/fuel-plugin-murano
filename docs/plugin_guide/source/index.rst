@@ -1,6 +1,6 @@
-============================
-Murano Plugin for Fuel Guide
-============================
+================================
+The Murano Plugin for Fuel Guide
+================================
 
 .. toctree::
    :maxdepth: 2

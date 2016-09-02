@@ -1,17 +1,16 @@
 .. _pg-install:
 
-========================
-Installing Murano plugin
-========================
+Installing the Murano plugin
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Before you install Murano plugin, verify that your environment meets the
-requirements described in :ref:`pg-prerequisites`. You must have the Fuel
+Before you install the Murano plugin, verify that your environment meets the
+requirements described in :ref:`prerequisites`. You must have the Fuel
 Master node installed and configured before you can install the plugin.
 Typically, you install a Fuel plugin before you deploy an OpenStack environment.
 
-**To install Murano plugin:**
+**To install the Murano plugin:**
 
-#. Download Murano plugin from the `Fuel Plugins Catalog`_.
+#. Download the Murano plugin from the `Fuel Plugins Catalog`_.
 
 #. Copy the plugin ``.rpm`` package to the Fuel Master node:
 
