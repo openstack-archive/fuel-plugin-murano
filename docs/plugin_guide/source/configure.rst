@@ -1,14 +1,10 @@
 .. _pg-configure:
 
-=======================
-Configure Murano plugin
-=======================
+Configuring the Murano plugin
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Once the *Murano Plugin* is installed, follow the instruction below to create
+Once the Murano plugin is installed, follow the instruction below to create
 an OpenStack environment with Murano services.
-
-Plugin configuration
---------------------
 
 **To configure the plugin:**
 
@@ -25,7 +21,7 @@ Plugin configuration
 #. Configure the Murano plugin as required selecting the following available
    settings.
 
-   :guilabel:`Murano Repository URL` specifies the murano applications
+   :guilabel:`Murano Repository URL` specifies the Murano applications
    repository to import a package.
 
    :guilabel:`Install Murano service broker for Cloud Foundry` enables Cloud
