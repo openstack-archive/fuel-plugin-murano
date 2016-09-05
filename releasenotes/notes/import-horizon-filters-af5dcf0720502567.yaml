@@ -1,0 +1,5 @@
+---
+fixes:
+  - Fixed the issue that prevented the Murano Dashboard
+    from finding certain horizon filters,
+    such as 'parse_isotime', 'timesince_or_never', and others.

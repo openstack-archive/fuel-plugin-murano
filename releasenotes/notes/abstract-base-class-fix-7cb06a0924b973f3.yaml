@@ -1,0 +1,8 @@
+---
+fixes:
+  - When glare is used, specifying a base class in the UI definition
+    now also fetches all the packages with classes
+    that inherit from that class. For example, if you
+    specify the 'io.example.Parent' class, the dashboard
+    fetches 'io.example.Child1' and 'io.example.Child2', and any other
+    descendants of 'io.example.Parent' that are present.

@@ -1,0 +1,16 @@
+---
+features:
+  - Added support for application deployment across OpenStack regions.
+    Now, all OpenStack resource classes inherit from ``io.murano.CloudResource``
+    that provides ``.getRegion()`` method and ``regionName`` property.
+    This allows assigning resources
+    to different regions. ``.getRegion()`` returns ``io.murano.CloudRegion``
+    instance that resource or its parent belongs to.
+    The interface of ``CloudRegion`` is similar to the ``Environment`` class and should be used to
+    get ``HeatStack`` instance associated with the region,
+    default network configuration, security
+    group manager, and agent listener instances. ``Environment`` now acts as
+    a default region so backward compatibility is not broken. However, new
+    applications should not use the ``Environment`` to set security group rules but
+    rather a region(s) of their instance(s) in order to work correctly when
+    their instances were configured to use region other than the default.

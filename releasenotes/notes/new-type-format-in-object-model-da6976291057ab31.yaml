@@ -1,0 +1,10 @@
+---
+features:
+  - Changed the type representation in the object model. Previously, there were
+    three attributes in the "?" section of the object - ``type``, ``classVersion``,
+    and ``package``, where only the ``type`` was mandatory. Now, these attributes are merged into
+    single attribute ``type`` that has the ``typeName/version@package`` format.
+    The ``version`` and ``package`` parts are still optional.
+upgrades:
+  - Any tools that inspected the object model should be updated to expect
+    new object format representation ``typeName/version@package``
