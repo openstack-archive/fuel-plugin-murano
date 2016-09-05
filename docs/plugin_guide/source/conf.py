@@ -29,8 +29,13 @@ import os
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
-#    'sphinx.ext.todo',
-#    'sphinx.ext.coverage',
+    'oslosphinx',
+    'reno.sphinxext',
+    'rst2pdf.pdfbuilder',
+]
+
+pdf_documents = [
+    ('index', u'FuelMuranoPLugin', u'Fuel Murano Plugin', u'Mirantis'),
 ]
 
 # Add any paths that contain templates here, relative to this directory.
