@@ -1,0 +1,5 @@
+---
+fixes:
+  - Fixed the order of packages import. The main package is now imported before
+    all its dependencies. Cyclic dependencies are imported in a
+    random order.
