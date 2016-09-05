@@ -29,8 +29,8 @@ import os
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
-#    'sphinx.ext.todo',
-#    'sphinx.ext.coverage',
+    'oslosphinx',
+    'reno.sphinxext',
 ]
 
 # Add any paths that contain templates here, relative to this directory.
