@@ -2,3 +2,7 @@
 *.rpm
 *.deb
 deployment_scripts/modules/murano
+
+AUTHORS
+ChangeLog
+docs/plugin_guide/build/
