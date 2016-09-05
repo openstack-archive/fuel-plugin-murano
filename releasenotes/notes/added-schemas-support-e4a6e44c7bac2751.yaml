@@ -1,0 +1,7 @@
+---
+features:
+    - Added support for class/method JSON-schema API.
+    - New murano CLI command :command:`murano class-schema [--package-name PACKAGE_NAME]
+      [--class-version PACKAGE_VERSION] <CLASS> [<METHOD> [<METHOD> ...]]`
+    - New OSC command :command:`openstack class-schema [--package-name PACKAGE_NAME]
+      [--class-version PACKAGE_VERSION] <CLASS> [<METHOD> [<METHOD> ...]]`
