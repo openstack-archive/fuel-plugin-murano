@@ -9,3 +9,4 @@ The Murano Plugin for Fuel Guide
    install
    configure
    update
+   release_notes
