@@ -4,12 +4,12 @@ set -eux
 . "$(dirname "$(readlink -f "$0")")"/functions.sh
 
 VERSION_FILE="build_version"
-MURANO_REF=${MURANO_REF:-'stable/mitaka'}
-MURANO_PACKAGE_RELEASE=${MURANO_PACKAGE_RELEASE:-'9.0'}
-MURANO_TARBALL_URL=${MURANO_TARBALL_URL:-"https://github.com/openstack/puppet-murano/archive/${MURANO_REF}.tar.gz"}
 
-# Add murano packages and some dependencies, from master pkg's
-MURANO_PACKAGES_URLS_DEFAULT="http://mirror.fuel-infra.org/extras/murano-plugin-repos/ubuntu/${MURANO_PACKAGE_RELEASE}/pool/main/"
+# Describe version-depend variables:
+PUPPET_MURANO_REF=${MURANO_REF:-'stable/mitaka'}
+PUPPET_MURANO_GIT=${MURANO_REF:-'https://github.com/openstack/puppet-murano.git'}
+# Add murano packages and some dependencies, from master pkg's repo:
+MURANO_PACKAGES_URLS_DEFAULT="http://mirror.fuel-infra.org/extras/murano-plugin-repos/ubuntu/9.0/pool/main/"
 
 MURANO_PACKAGES_URLS=${MURANO_PACKAGES_URLS:-${MURANO_PACKAGES_URLS_DEFAULT}}
 
@@ -17,13 +17,12 @@ for url in ${MURANO_PACKAGES_URLS}; do
   download_package 'deb' "${url}"
 done
 
-download_puppet_module "murano" ${MURANO_TARBALL_URL}
+download_puppet_module "murano" ${PUPPET_MURANO_GIT} ${PUPPET_MURANO_REF}
 
-# generate general version file
-generate_version_file "${VERSION_FILE}"
+# generate deb version file
+generate_deb_version_file "${VERSION_FILE}"
 
 # add info about MURANO_TARBALL
-echo "MURANO_TARBALL_URL=${MURANO_TARBALL_URL}" >> "${VERSION_FILE}"
-echo "MURANO_TARBALL_COMMIT=$(git ls-remote -h https://github.com/openstack/puppet-murano.git |grep "refs/heads/${MURANO_REF}" |awk '{print $1}' )" >> "${VERSION_FILE}"
-
-
+echo "PUPPET_MURANO_REF=${PUPPET_MURANO_REF}" >> "${VERSION_FILE}"
+echo "PUPPET_MURANO_GIT=${PUPPET_MURANO_GIT}" >> "${VERSION_FILE}"
+echo "PUPPET_MURANO_COMMIT=$(git ls-remote -h ${PUPPET_MURANO_GIT} |grep "refs/heads/${PUPPET_MURANO_REF}" |awk '{print $1}' )" >> "${VERSION_FILE}"

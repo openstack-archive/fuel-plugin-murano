@@ -38,19 +38,23 @@ function download_package {
 
 # Download official Puppet module and store it in the local directory
 function download_puppet_module {
-    rm -rf "${MODULES_DIR:?}"/"$1"
-    mkdir -p "${MODULES_DIR}"/"$1"
-    wget -qO- "$2" | tar -C "${MODULES_DIR}/$1" --strip-components=1 -xz
+    local m_dir=$1
+    local git_repo=$2
+    local git_branch=$3
+
+    rm -rvf "${MODULES_DIR:?}"/"$m_dir"
+    git clone "${git_repo}" --single-branch -b "${git_branch}" "${MODULES_DIR}/${m_dir}"
 }
 
 # Generate version file in format:
 # Build: $build_date
 # FUEL_PLUGIN_COMMIT=$sha
 # $pkg_name=$pkg_version
-function generate_version_file {
+function generate_deb_version_file {
     local version_file="${1:-build_version}"
     local tmp_file=$(mktemp)
     echo "# Build: $(date +%Y-%m-%d-%H-%M-%S)"  >> "${version_file}"
+    echo "FUEL_PLUGIN_REF=$(git rev-parse --abbrev-ref HEAD)" >> "${version_file}"
     echo "FUEL_PLUGIN_COMMIT=$(git rev-parse HEAD)" >> "${version_file}"
     while read -d '' -r pkg; do
         dpkg-deb -I "${pkg}"| awk '/Package:/{name=$2}/Version:/{ver=$2;print name"="ver}' >> "${tmp_file}"
