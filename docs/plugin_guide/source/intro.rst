@@ -3,10 +3,9 @@
 Overview
 ~~~~~~~~
 
-Murano plugin for Fuel is a plugin to install the Application Catalog Service
-for OpenStack.
-Murano plugin provides flexibility for the OpenStack Application Catalog
-service by supporting multiple releases and versions (for some Fuel version).
+Murano plugin for Fuel is a plugin to install the Application Orchestration
+and Catalog Service for OpenStack and to provide flexibility for this service
+by supporting multiple releases and versions.
 Also, the plugin provides the capability to detach Murano from the controller
 node as a separate node.
 
@@ -15,7 +14,8 @@ node as a separate node.
 Software prerequisites
 ----------------------
 
-To use Murano plugin, verify that your environment meets the following prerequisites:
+To use Murano plugin, verify that your environment meets the following
+prerequisites:
 
 ======================= =================================
 Prerequisites           Version/Comment
