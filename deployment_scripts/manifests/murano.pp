@@ -131,7 +131,12 @@ class { '::murano::api':
   package_ensure => 'latest',
 }
 
-include ::murano::engine
-include ::murano::client
+class { '::murano::client':
+  package_ensure => 'latest'
+}
+
+class { '::murano::engine':
+  package_ensure => 'latest'
+}
 
 Firewall[$firewall_rule] -> Class['murano::api']

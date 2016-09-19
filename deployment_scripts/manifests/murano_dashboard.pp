@@ -23,7 +23,6 @@ if $app_catalog_ui {
 }
 
 include ::murano::params
-include ::murano::client
 include ::horizon::params
 
 ensure_resource('service', 'httpd', {
@@ -32,6 +31,10 @@ ensure_resource('service', 'httpd', {
   'restart' => true,
   'name'    => $::horizon::params::http_service,
 })
+
+class { '::murano::client':
+  package_ensure => 'latest'
+}
 
 class { '::murano::dashboard':
   enable_glare   => $use_glare,
