@@ -6,23 +6,42 @@ set -eux
 VERSION_FILE="build_version"
 
 # Describe version-depend variables:
-PUPPET_MURANO_REF=${MURANO_REF:-'stable/mitaka'}
-PUPPET_MURANO_GIT=${MURANO_REF:-'https://github.com/openstack/puppet-murano.git'}
+PUPPET_MURANO_REF=${PUPPET_MURANO_REF:-'stable/mitaka'}
+PUPPET_MURANO_GIT=${PUPPET_MURANO_GIT:-'https://github.com/openstack/puppet-murano.git'}
 # Add murano packages and some dependencies, from master pkg's repo:
 MURANO_PACKAGES_URLS_DEFAULT="http://mirror.fuel-infra.org/extras/murano-plugin-repos/ubuntu/9.0/pool/main/"
 
 MURANO_PACKAGES_URLS=${MURANO_PACKAGES_URLS:-${MURANO_PACKAGES_URLS_DEFAULT}}
+OVERRIDE_PUPPET_MURANO=${OVERRIDE_PUPPET_MURANO:-true}
 
 for url in ${MURANO_PACKAGES_URLS}; do
-  download_package 'deb' "${url}"
+    if wget ${url} -O /dev/null ; then
+      download_package 'deb' "${url}"
+    else
+      echo "WARNING: URL ${url} is broken"
+    fi
 done
 
-download_puppet_module "murano" ${PUPPET_MURANO_GIT} ${PUPPET_MURANO_REF}
+exit
+# OVERRIDE_PUPPET_MURANO usually used only in CI systems
+if [[ "${OVERRIDE_PUPPET_MURANO}" == false ]]; then
+    echo "INFO: OVERRIDE_PUPPET_MURANO flag found!"
+    echo -e "WARNING: Puppet module will not be fetched with pre_build_hook!\nAssume, thats it was already fetched!"
+else
+    download_puppet_module "murano" "${PUPPET_MURANO_GIT}" "${PUPPET_MURANO_REF}"
+fi
 
 # generate deb version file
 generate_deb_version_file "${VERSION_FILE}"
 
+# Update default informathion, in case OVERRIDE_PUPPET_MURANO was used
+pushd "${MODULES_DIR}/murano/"
+    PUPPET_MURANO_REF=$(git rev-parse --abbrev-ref HEAD)
+    PUPPET_MURANO_GIT=$(git config --get remote.origin.url)
+    PUPPET_MURANO_COMMIT=$(git log -1 --pretty=%H)
+popd
+
 # add info about MURANO_TARBALL
 echo "PUPPET_MURANO_REF=${PUPPET_MURANO_REF}" >> "${VERSION_FILE}"
 echo "PUPPET_MURANO_GIT=${PUPPET_MURANO_GIT}" >> "${VERSION_FILE}"
-echo "PUPPET_MURANO_COMMIT=$(git ls-remote -h ${PUPPET_MURANO_GIT} |grep "refs/heads/${PUPPET_MURANO_REF}" |awk '{print $1}' )" >> "${VERSION_FILE}"
+echo "PUPPET_MURANO_COMMIT=${PUPPET_MURANO_COMMIT}" >> "${VERSION_FILE}"
