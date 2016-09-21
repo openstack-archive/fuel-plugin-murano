@@ -22,7 +22,6 @@ for url in ${MURANO_PACKAGES_URLS}; do
     fi
 done
 
-exit
 # OVERRIDE_PUPPET_MURANO usually used only in CI systems
 if [[ "${OVERRIDE_PUPPET_MURANO}" == false ]]; then
     echo "INFO: OVERRIDE_PUPPET_MURANO flag found!"
