@@ -1,0 +1,5 @@
+---
+issues:
+  - Deploying Cloud Foundry integration service with this release of fuel-murano-plugin will not work.
+  - The method ``getInstanceIpList`` of ``Instance`` class currently does not work currectly.
+    Murano apps that utilise this method will fail.
