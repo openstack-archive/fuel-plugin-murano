@@ -26,7 +26,10 @@ Fuel                    9.0
 Limitations
 -----------
 
-Murano plugin has no issues or limitations of usage.
+* Murano plugin is known to conflict with Contrail plugin. The reason is that
+  both ``murano-api`` and ``contrail-api`` services use 8082 as their
+  default port. To resolve this, please specify a
+  custom port for ``contrail-api`` in Contrail plugin.
 
 Licenses
 --------
