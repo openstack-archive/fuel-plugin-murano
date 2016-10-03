@@ -199,7 +199,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-  ('index', 'murano.tex', u'The Murano Plugin for Fuel Documentation',
+  ('index', 'MuranoPlugin.tex', u'The Murano Plugin for Fuel Documentation',
    u'Mirantis Inc.', 'manual'),
 ]
 

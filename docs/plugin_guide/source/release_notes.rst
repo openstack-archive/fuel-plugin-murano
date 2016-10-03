@@ -1,5 +1,5 @@
 
-1.0.0 Fuel Murano Plugin Release Notes
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Release notes
+~~~~~~~~~~~~~
 
 .. release-notes::
