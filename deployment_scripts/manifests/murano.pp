@@ -85,7 +85,7 @@ firewall { $firewall_rule :
 }
 
 if $murano_plugins and has_key($murano_plugins, 'glance_artifacts_plugin') and $murano_plugins['glance_artifacts_plugin']['enabled'] {
-  $packages_service = 'glance'
+  $packages_service = 'glare'
 } else {
   $packages_service = 'murano'
 }
