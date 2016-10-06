@@ -15,8 +15,9 @@ service { 'murano-engine':
   name   => $::murano::params::engine_service_name
 }
 
-$base_cfapi = hiera_hash('murano-cfapi', {})
-if pick($base_cfapi['enabled'], false) {
+$base_cfapi   = hiera_hash('murano-cfapi', {})
+$plugin_cfapi = hiera_hash('murano_cfapi_plugin', {})
+if pick($base_cfapi['enabled'], false) or pick($plugin_cfapi['enabled'], false) {
   service { 'murano-cfapi':
     ensure => 'stopped',
     name   => $::murano::params::cfapi_service_name
