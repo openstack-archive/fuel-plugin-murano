@@ -180,10 +180,9 @@
   condition:
     yaql_exp: >
       $.get('detach-murano', {}).get('metadata', {}).get('enabled', false) and
-      $.network_metadata.nodes.values().any(
+      $.murano.enabled and $.network_metadata.nodes.values().any(
          ('murano-node' in $.node_roles) or
-         ('primary-murano-node' in $.node_roles)) and ($.murano.enabled or
-      changedAny($.murano.enabled))
+         ('primary-murano-node' in $.node_roles))
   required_for: [murano-controller-end]
   parameters:
     puppet_manifest: manifests/murano_disable_old.pp
