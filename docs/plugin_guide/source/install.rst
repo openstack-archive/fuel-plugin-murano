@@ -35,7 +35,7 @@ Typically, you install a Fuel plugin before you deploy an OpenStack environment.
      # fuel plugins
      id | name          | version | package_version
      ---|---------------|---------|----------------
-     1  | detach-murano | 1.0.0   | 4.0.0
+     1  | detach-murano | 1.1.0   | 4.0.0
 
 #. Proceed to :ref:`pg-configure`.
 
