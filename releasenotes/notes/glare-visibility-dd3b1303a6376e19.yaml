@@ -1,0 +1,4 @@
+---
+fixes:
+  - CLI flag ``--is-public`` had no effect when importing a package
+    with 'glare' package service. This flag now correctly marks the package public on upload.

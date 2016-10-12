@@ -1,0 +1,6 @@
+---
+issues:
+  - Deploying Cloud Foundry integration service with this release of ``fuel-plugin-murano`` does not work correctly.
+  - If you update from murano plugin version 1.0.0 with Murano deployed on controller to 1.1.0 and add deploy murano on a
+    separate node Murano will not work correctly.
+  - Community App Catalog UI panels, delivered as part of ``fuel-plugin-murano`` do not work correctly with this release.
