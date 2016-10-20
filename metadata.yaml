@@ -1,6 +1,6 @@
 name: detach-murano
 title: Murano plugin
-version: '1.1.0'
+version: '1.2.0'
 description: Install Murano applications
 fuel_version: ['9.0']
 licenses: ['Apache License Version 2.0']
