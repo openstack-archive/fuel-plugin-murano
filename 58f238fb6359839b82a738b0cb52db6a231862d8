@@ -1,0 +1,10 @@
+Code-Review+2: Kirill Zaitsev <k.zaitsev@me.com>
+Code-Review+1: Aleksandr Kholkin <akholkin@mirantis.com>
+Code-Review+2: Victor Ryzhenkin (freerunner) <vryzhenkin@mirantis.com>
+Workflow+1: Victor Ryzhenkin (freerunner) <vryzhenkin@mirantis.com>
+Verified+2: Jenkins
+Submitted-by: Jenkins
+Submitted-at: Fri, 21 Oct 2016 11:29:23 +0000
+Reviewed-on: https://review.openstack.org/389189
+Project: openstack/fuel-plugin-murano
+Branch: refs/heads/master
