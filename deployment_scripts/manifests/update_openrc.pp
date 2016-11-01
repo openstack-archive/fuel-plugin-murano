@@ -31,41 +31,47 @@ file_line { "murano_repo_url ${service_user_name}":
 
 if has_key($murano_plugins, 'glance_artifacts_plugin') and $murano_plugins['glance_artifacts_plugin']['enabled'] {
   file_line { 'murano_glare_plugin root':
-    line  => "export MURANO_PACKAGES_SERVICE='glance'",
+    line  => "export MURANO_PACKAGES_SERVICE='glare'",
     match => '^export\ MURANO_PACKAGES_SERVICE\=',
     path  => '/root/openrc',
   }
 
   file_line { "murano_glare_plugin ${operator_user_name}":
-    line  => "export MURANO_PACKAGES_SERVICE='glance'",
+    line  => "export MURANO_PACKAGES_SERVICE='glare'",
     match => '^export\ MURANO_PACKAGES_SERVICE\=',
     path  => "${operator_user_homedir}/openrc",
   }
 
   file_line { "murano_glare_plugin ${service_user_name}":
-    line  => "export MURANO_PACKAGES_SERVICE='glance'",
+    line  => "export MURANO_PACKAGES_SERVICE='glare'",
     match => '^export\ MURANO_PACKAGES_SERVICE\=',
     path  => "${service_user_homedir}/openrc",
   }
 } else {
   file_line { 'murano_glare_plugin':
-    ensure => absent,
-    line   => "export MURANO_PACKAGES_SERVICE='glance'",
-    match  => '^export\ MURANO_PACKAGES_SERVICE\=',
-    path   => '/root/openrc',
+    ensure            => absent,
+    line              => "export MURANO_PACKAGES_SERVICE=",
+    replace           => false,
+    match             => "^export\ MURANO_PACKAGES_SERVICE\='(glance|glare)'",
+    match_for_absence => true,
+    path              => '/root/openrc',
   }
 
   file_line { "murano_glare_plugin ${operator_user_name}":
-    ensure => absent,
-    line  => "export MURANO_PACKAGES_SERVICE='glance'",
-    match => '^export\ MURANO_PACKAGES_SERVICE\=',
-    path  => "${operator_user_homedir}/openrc",
+    ensure            => absent,
+    line              => "export MURANO_PACKAGES_SERVICE=",
+    replace           => false,
+    match             => "^export\ MURANO_PACKAGES_SERVICE\='(glance|glare)'",
+    match_for_absence => true,
+    path              => "${operator_user_homedir}/openrc",
   }
 
   file_line { "murano_glare_plugin ${service_user_name}":
-    ensure => absent,
-    line  => "export MURANO_PACKAGES_SERVICE='glance'",
-    match => '^export\ MURANO_PACKAGES_SERVICE\=',
-    path  => "${service_user_homedir}/openrc",
+    ensure            => absent,
+    line              => "export MURANO_PACKAGES_SERVICE=",
+    replace           => false,
+    match             => "^export\ MURANO_PACKAGES_SERVICE\='(glance|glare)'",
+    match_for_absence => true,
+    path              => "${service_user_homedir}/openrc",
   }
 }
