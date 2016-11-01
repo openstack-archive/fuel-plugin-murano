@@ -12,6 +12,11 @@ if has_key($murano_plugins, 'glance_artifacts_plugin') and $murano_plugins['glan
   package {'murano-glance-artifacts-plugin':
     ensure  => 'latest',
   }
+
+  include ::glance::params
+  ensure_resource('service', 'glance-glare',
+    { ensure => running, name => $::glance::params::glare_service_name })
+  Package['murano-glance-artifacts-plugin'] ~> Service['glance-glare']
 } else {
   $use_glare = false
 }
