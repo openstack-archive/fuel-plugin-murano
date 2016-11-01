@@ -99,7 +99,7 @@
   type: puppet
   groups: ['primary-controller','controller']
   required_for: [murano-controller-end]
-  requires: [horizon]
+  requires: [horizon, glance]
   condition:
     yaql_exp: >
       $.get('detach-murano', {}).get('metadata', {}).get('enabled', false) and
