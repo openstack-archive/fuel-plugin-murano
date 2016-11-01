@@ -86,6 +86,11 @@ firewall { $firewall_rule :
 
 if $murano_plugins and has_key($murano_plugins, 'glance_artifacts_plugin') and $murano_plugins['glance_artifacts_plugin']['enabled'] {
   $packages_service = 'glare'
+
+  include ::glance::params
+  ensure_resource('service', 'glance-glare',
+    { ensure => running, name => $::glance::params::glare_service_name })
+  Package['murano-glance-artifacts-plugin'] ~> Service['glance-glare']
 } else {
   $packages_service = 'murano'
 }
