@@ -1,0 +1,4 @@
+---
+issues:
+  - Deploying Cloud Foundry integration service with this release of ``fuel-plugin-murano`` does not work correctly.
+  - Community App Catalog UI panels, delivered as part of ``fuel-plugin-murano`` do not work correctly with this release.
