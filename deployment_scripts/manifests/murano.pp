@@ -110,7 +110,7 @@ class { '::murano' :
   rabbit_os_user      => $rabbit_hash['user'],
   rabbit_os_password  => $rabbit_hash['password'],
   rabbit_os_port      => $amqp_port,
-  rabbit_os_host      => split($amqp_hosts, ','),
+  rabbit_os_host      => $amqp_hosts,
   rabbit_ha_queues    => $rabbit_ha_queues,
   rabbit_own_host     => $public_ip,
   rabbit_own_port     => $murano_hash['rabbit']['port'],
