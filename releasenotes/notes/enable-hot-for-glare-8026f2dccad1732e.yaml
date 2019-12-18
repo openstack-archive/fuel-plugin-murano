@@ -1,5 +1,0 @@
----
-fixes:
-  - Fixed the issue with the UI dialog that did not display in Murano Dashboard for
-    applications without UI definitions bundled in the package. This usually affected
-    HOT-based packages and other non-muranopl-based applications.

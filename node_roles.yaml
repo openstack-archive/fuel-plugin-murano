@@ -1,6 +1,0 @@
-murano-node:
-  name: "Murano node"
-  description: ""
-  has_primary: true
-  public_ip_required: false
-  weight: 100

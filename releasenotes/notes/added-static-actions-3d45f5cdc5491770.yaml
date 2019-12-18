@@ -1,9 +1,0 @@
----
-features:
-  - Added support for static actions API.
-  - New Murano CLI command :command:`murano static-action-call [--arguments
-    [<KEY=VALUE> [<KEY=VALUE> ...]]] [--package-name <PACKAGE>]
-    [--class-version CLASS_VERSION] <CLASS> <METHOD>`
-  - New OSC command :command:`openstack static-action call [--arguments
-    [<KEY=VALUE> [<KEY=VALUE> ...]]] [--package-name <PACKAGE>]
-    [--class-version CLASS_VERSION] <CLASS> <METHOD>`

@@ -1,4 +1,0 @@
----
-fixes:
-  - Importing a package into glare now fills the `'inherited'` field with full
-    inheritance info. Previously, it only contained immediate parent classes.

@@ -1,4 +1,0 @@
----
-features:
-  - Added ``/templates/{env_template_id}/services/{path:.*?}`` API endpoint
-    for environment template application update operation.

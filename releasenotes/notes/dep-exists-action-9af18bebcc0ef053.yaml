@@ -1,7 +1,0 @@
----
-features:
-  - Added the :option:`--dep-exists-action` option to
-    murano :command:`package-import` and :command:`bundle-import` commands.
-    It allows specifying a different default action for an existing main
-    package and existing dependencies.
-    In case of specifying only :option:`--exists-action`, the action also applies to dependencies.

@@ -1,7 +1,0 @@
----
-issues:
-  - Murano services will not operate correctly when installed on a separate detached node, if you're installing
-    ``fuel-plugin-murano`` in an environment that contains Murano, bundled with Fuel 9.0. This happens because
-    ``murano-engine`` service on controller nodes is still active. As a workaround, you need to disable ``murano-engine``
-    service on controller nodes manually after installing ``fuel-plugin-murano``.
-  - Deploying Cloud Foundry integration service with this release of ``fuel-plugin-murano`` does not work correctly.

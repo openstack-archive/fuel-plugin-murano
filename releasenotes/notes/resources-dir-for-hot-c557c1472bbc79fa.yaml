@@ -1,5 +1,0 @@
----
-fixes:
-  - Added the capability to simultaneously use the :option:`--resources-dir`
-    and :option:`--template` arguments for the :command:`package-create` command.
-    This allows creating HOT-packages with the ``Resources`` folder.
